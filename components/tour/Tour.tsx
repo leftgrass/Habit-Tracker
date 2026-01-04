@@ -147,7 +147,14 @@ export function Tour() {
 
   return (
     <>
-      <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={handleSkip} />
+      {targetRect && (
+        <div
+          className="fixed inset-0 z-[100] pointer-events-none"
+          style={{
+            boxShadow: `inset 0 0 0 9999px rgba(0, 0, 0, 0.6)`,
+          }}
+        />
+      )}
 
       {targetRect && (
         <div
