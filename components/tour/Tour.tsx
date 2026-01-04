@@ -56,7 +56,6 @@ export function Tour() {
   useEffect(() => {
     if (!hasSeenTour) {
       setIsVisible(true);
-      setTourStep(0); // Reset to first step on new visit
     }
   }, [hasSeenTour]);
 
