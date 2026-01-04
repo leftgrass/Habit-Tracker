@@ -247,12 +247,18 @@ export function Tour() {
 
 export function TourButton() {
   const startTour = useHabitStore((state) => state.startTour);
+  const toggleSettings = useHabitStore((state) => state.toggleSettings);
+
+  const handleStartTour = () => {
+    toggleSettings(false);
+    startTour();
+  };
 
   return (
     <Button
       variant="outline"
       size="sm"
-      onClick={startTour}
+      onClick={handleStartTour}
       className="flex items-center space-x-2"
     >
       <Play className="w-4 h-4" />
