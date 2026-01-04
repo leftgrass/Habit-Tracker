@@ -54,10 +54,11 @@ export function Tour() {
   const tourStep = TOUR_STEPS[tourCurrentStep];
 
   useEffect(() => {
-    if (!hasSeenTour) {
+    // Only show tour if user hasn't seen it AND tour hasn't been completed
+    if (!hasSeenTour && tourCurrentStep < TOUR_STEPS.length) {
       setIsVisible(true);
     }
-  }, [hasSeenTour]);
+  }, [hasSeenTour, tourCurrentStep]);
 
   useEffect(() => {
     if (isVisible && tourStep) {
