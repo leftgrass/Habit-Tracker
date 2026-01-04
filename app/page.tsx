@@ -15,6 +15,7 @@ import { CircularProgress } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
 import { ClientOnly } from '@/components/ui/ClientOnly';
 import { Tour } from '@/components/tour/Tour';
+import { AchievementConfetti } from '@/components/AchievementConfetti';
 
 export default function Home() {
   const { habits, toggleHabitModal, uiState, setViewMode, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
@@ -31,6 +32,7 @@ export default function Home() {
   return (
     <>
       <Tour />
+      <AchievementConfetti />
       <HabitModal />
       <SettingsPanel />
       <AnalyticsPanel />
@@ -159,6 +161,17 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Quick Actions</h3>
                   <div className="space-y-2">
                     <Button
+                      data-tour="add-habit"
+                      variant="primary"
+                      className="flex items-center space-x-2"
+                      onClick={() => {
+                        toggleHabitModal(true);
+                      }}
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      Add Habit
+                    </Button>
+                    <Button
                       data-tour="calendar"
                       variant="outline"
                       className="w-full justify-start"
@@ -170,6 +183,7 @@ export default function Home() {
                       View Calendar
                     </Button>
                     <Button
+                      data-tour="analytics"
                       variant="outline"
                       className="w-full justify-start"
                       onClick={() => {
@@ -194,7 +208,7 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
+              <Card data-tour="quote" className="bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
                 <CardContent className="py-6">
                   <p 
                     className="text-lg font-medium text-white text-center"

@@ -6,12 +6,10 @@ import { X, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-r
 import { useHabitStore } from '@/store/useHabitStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfWeek, endOfWeek, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
-import { PanelTour } from '@/components/tour/PanelTour';
-import { CALENDAR_TOUR_STEPS } from '@/components/tour/tourSteps';
 
 export function CalendarPanel() {
-  const { uiState, toggleCalendar, habits, setCalendarTourCompleted, setCalendarTourStep, startCalendarTour } = useHabitStore();
-  const { isCalendarOpen, hasSeenCalendarTour, calendarTourStep } = uiState;
+  const { uiState, toggleCalendar, habits } = useHabitStore();
+  const { isCalendarOpen } = uiState;
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const activeHabits = useMemo(() => habits.filter(h => !h.isArchived), [habits]);
@@ -57,7 +55,7 @@ export function CalendarPanel() {
               className="h-full bg-[var(--card-bg)] shadow-2xl flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--card-border)]" data-calendar-tour="header">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--card-border)]">
                 <div className="flex items-center space-x-3">
                   <CalendarIcon className="w-6 h-6 text-[var(--primary)]" />
                   <div>
@@ -103,7 +101,7 @@ export function CalendarPanel() {
                   ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-1" data-calendar-tour="grid">
+                <div className="grid grid-cols-7 gap-1">
                   {calendarDays.map((day, index) => {
                     const { completed, total, percentage } = getCompletionData(day);
                     const isCurrentMonth = isSameMonth(day, currentMonth);
@@ -143,7 +141,7 @@ export function CalendarPanel() {
                   })}
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[var(--card-border)]" data-calendar-tour="legend">
+                <div className="mt-6 pt-4 border-t border-[var(--card-border)]">
                   <div className="flex items-center justify-center space-x-6 text-sm text-[var(--muted)]">
                     <div className="flex items-center space-x-2">
                       <div className="w-3 h-3 rounded-full bg-transparent" />
@@ -164,7 +162,7 @@ export function CalendarPanel() {
                   </div>
                 </div>
 
-                <Card className="mt-6" data-calendar-tour="stats">
+                <Card className="mt-6">
                   <CardContent className="py-4">
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
@@ -194,16 +192,6 @@ export function CalendarPanel() {
                 </Card>
               </div>
             </motion.div>
-
-            <PanelTour
-              steps={CALENDAR_TOUR_STEPS}
-              hasSeenTour={hasSeenCalendarTour}
-              currentStep={calendarTourStep}
-              setTourCompleted={setCalendarTourCompleted}
-              setTourStep={setCalendarTourStep}
-              startTour={startCalendarTour}
-              onClose={() => toggleCalendar(false)}
-            />
           </div>
         </React.Fragment>
       )}

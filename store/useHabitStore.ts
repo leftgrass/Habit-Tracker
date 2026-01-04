@@ -37,12 +37,6 @@ interface HabitState {
   setTourCompleted: () => void;
   setTourStep: (step: number) => void;
   startTour: () => void;
-  setCalendarTourCompleted: () => void;
-  setCalendarTourStep: (step: number) => void;
-  startCalendarTour: () => void;
-  setAnalyticsTourCompleted: () => void;
-  setAnalyticsTourStep: (step: number) => void;
-  startAnalyticsTour: () => void;
   setHabitTourCompleted: () => void;
   setHabitTourStep: (step: number) => void;
   startHabitTour: () => void;
@@ -100,10 +94,6 @@ export const useHabitStore = create<HabitState>()(
         },
         hasSeenTour: false,
         tourCurrentStep: 0,
-        hasSeenCalendarTour: false,
-        calendarTourStep: 0,
-        hasSeenAnalyticsTour: false,
-        analyticsTourStep: 0,
         hasSeenHabitTour: false,
         habitTourStep: 0,
       },
@@ -308,11 +298,12 @@ export const useHabitStore = create<HabitState>()(
       },
 
       unlockAchievement: (id) => {
+        const achievement = get().achievements.find(a => a.id === id);
         set((state) => ({
-          achievements: state.achievements.map((achievement) =>
-            achievement.id === id
-              ? { ...achievement, unlockedAt: new Date().toISOString(), progress: achievement.target }
-              : achievement
+          achievements: state.achievements.map((a) =>
+            a.id === id
+              ? { ...a, unlockedAt: new Date().toISOString(), progress: a.target }
+              : a
           ),
         }));
       },
@@ -439,42 +430,6 @@ export const useHabitStore = create<HabitState>()(
       startTour: () => {
         set((state) => ({
           uiState: { ...state.uiState, hasSeenTour: false, tourCurrentStep: 0 },
-        }));
-      },
-
-      setCalendarTourCompleted: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenCalendarTour: true },
-        }));
-      },
-
-      setCalendarTourStep: (step) => {
-        set((state) => ({
-          uiState: { ...state.uiState, calendarTourStep: step },
-        }));
-      },
-
-      startCalendarTour: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenCalendarTour: false, calendarTourStep: 0 },
-        }));
-      },
-
-      setAnalyticsTourCompleted: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenAnalyticsTour: true },
-        }));
-      },
-
-      setAnalyticsTourStep: (step) => {
-        set((state) => ({
-          uiState: { ...state.uiState, analyticsTourStep: step },
-        }));
-      },
-
-      startAnalyticsTour: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenAnalyticsTour: false, analyticsTourStep: 0 },
         }));
       },
 
@@ -763,18 +718,6 @@ export const useHabitStore = create<HabitState>()(
           }
           if (state.uiState.tourCurrentStep === undefined) {
             state.uiState.tourCurrentStep = 0;
-          }
-          if (state.uiState.hasSeenCalendarTour === undefined) {
-            state.uiState.hasSeenCalendarTour = false;
-          }
-          if (state.uiState.calendarTourStep === undefined) {
-            state.uiState.calendarTourStep = 0;
-          }
-          if (state.uiState.hasSeenAnalyticsTour === undefined) {
-            state.uiState.hasSeenAnalyticsTour = false;
-          }
-          if (state.uiState.analyticsTourStep === undefined) {
-            state.uiState.analyticsTourStep = 0;
           }
           if (state.uiState.hasSeenHabitTour === undefined) {
             state.uiState.hasSeenHabitTour = false;

@@ -43,6 +43,18 @@ export const TOUR_STEPS = [
     content: 'Switch to calendar view to see your habit history in a monthly calendar format.',
     position: 'bottom' as const,
   },
+  {
+    target: '[data-tour="analytics"]',
+    title: 'Analytics Dashboard',
+    content: 'View detailed analytics including your total time, streaks, heatmaps, and habit rankings.',
+    position: 'bottom' as const,
+  },
+  {
+    target: '[data-tour="quote"]',
+    title: 'Daily Motivation',
+    content: 'Get a personalized motivational message based on your progress today. Keep pushing forward!',
+    position: 'top' as const,
+  },
 ];
 
 export function Tour() {

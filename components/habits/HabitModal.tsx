@@ -4,11 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useHabitStore } from '@/store/useHabitStore';
-import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { HabitCategory, HabitFrequency } from '@/types';
-import { PanelTour } from '@/components/tour/PanelTour';
-import { HABIT_TOUR_STEPS } from '@/components/tour/tourSteps';
+import { Button } from '@/components/ui/Button';
 
 const CATEGORIES = [
   { value: 'health', label: 'Health', emoji: '🏃' },
@@ -27,8 +24,8 @@ const HABIT_COLORS = ['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#E
 const DAY_ABBREVS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export function HabitModal() {
-  const { uiState, toggleHabitModal, addHabit, updateHabit, deleteHabit, setHabitTourCompleted, setHabitTourStep, startHabitTour } = useHabitStore();
-  const { isHabitModalOpen, selectedHabitId, hasSeenHabitTour, habitTourStep } = uiState;
+  const { uiState, toggleHabitModal, addHabit, updateHabit, deleteHabit } = useHabitStore();
+  const { isHabitModalOpen, selectedHabitId } = uiState;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<HabitCategory>('other');
@@ -108,9 +105,9 @@ export function HabitModal() {
                 <button onClick={() => toggleHabitModal(false)} className="p-2 rounded-lg text-[var(--muted)] hover:bg-[var(--secondary)]"><X className="w-5 h-5" /></button>
               </div>
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Habit name (e.g., Morning Exercise)" className="w-full px-4 py-3 border border-[var(--card-border)] rounded-lg focus:ring-2 focus:ring-[var(--primary)] bg-[var(--card-bg)] text-[var(--foreground)] placeholder-[var(--muted)]" autoFocus data-habit-tour="name" />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Habit name (e.g., Morning Exercise)" className="w-full px-4 py-3 border border-[var(--card-border)] rounded-lg focus:ring-2 focus:ring-[var(--primary)] bg-[var(--card-bg)] text-[var(--foreground)] placeholder-[var(--muted)]" autoFocus />
                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description (optional)" rows={2} className="w-full px-4 py-3 border border-[var(--card-border)] rounded-lg focus:ring-2 focus:ring-[var(--primary)] bg-[var(--card-bg)] text-[var(--foreground)] placeholder-[var(--muted)] resize-none" />
-                <div className="grid grid-cols-5 gap-2" data-habit-tour="category">
+                <div className="grid grid-cols-5 gap-2">
                   {CATEGORIES.map((cat) => (
                     <button key={cat.value} type="button" onClick={() => setCategory(cat.value as HabitCategory)} className={cn('p-3 rounded-lg text-center', category === cat.value ? 'bg-[var(--primary)]/20 border-2 border-[var(--primary)]' : 'bg-[var(--secondary)] border-2 border-transparent')}>
                       <span className="text-2xl block">{cat.emoji}</span>
@@ -118,12 +115,12 @@ export function HabitModal() {
                     </button>
                   ))}
                 </div>
-                <div className="flex space-x-2" data-habit-tour="color">
+                <div className="flex space-x-2">
                   {HABIT_COLORS.map((c) => (
                     <button key={c} type="button" onClick={() => setColor(c)} className={cn('w-8 h-8 rounded-full', color === c && 'ring-2 ring-offset-2 ring-[var(--muted)] scale-110')} style={{ backgroundColor: c }} />
                   ))}
                 </div>
-                <div className="flex space-x-2" data-habit-tour="frequency">
+                <div className="flex space-x-2">
                   <button type="button" onClick={() => setFrequency('daily')} className={cn('flex-1 py-2 rounded-lg', frequency === 'daily' ? 'bg-[var(--primary)] text-white' : 'bg-[var(--secondary)] text-[var(--foreground)]')}>Daily</button>
                   <button type="button" onClick={() => setFrequency('weekly')} className={cn('flex-1 py-2 rounded-lg', frequency === 'weekly' ? 'bg-[var(--primary)] text-white' : 'bg-[var(--secondary)] text-[var(--foreground)]')}>Weekly</button>
                 </div>
@@ -134,7 +131,7 @@ export function HabitModal() {
                     ))}
                   </div>
                 )}
-                <div className="space-y-2" data-habit-tour="target">
+                <div className="space-y-2">
                   <label className="text-sm font-medium text-[var(--foreground)]">Daily Target</label>
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
@@ -177,19 +174,9 @@ export function HabitModal() {
                 <div className="flex space-x-2 pt-4">
                   {selectedHabitId && <Button type="button" variant="danger" onClick={handleDelete} className="flex-1">Delete</Button>}
                   <Button type="button" variant="outline" onClick={() => toggleHabitModal(false)} className="flex-1">Cancel</Button>
-                  <Button type="submit" variant="primary" className="flex-1" disabled={!name.trim()} data-habit-tour="submit">{selectedHabitId ? 'Save Changes' : 'Create Habit'}</Button>
+                  <Button type="submit" variant="primary" className="flex-1" disabled={!name.trim()}>{selectedHabitId ? 'Save Changes' : 'Create Habit'}</Button>
                 </div>
               </form>
-
-              <PanelTour
-                steps={HABIT_TOUR_STEPS}
-                hasSeenTour={hasSeenHabitTour}
-                currentStep={habitTourStep}
-                setTourCompleted={setHabitTourCompleted}
-                setTourStep={setHabitTourStep}
-                startTour={startHabitTour}
-                onClose={() => toggleHabitModal(false)}
-              />
             </motion.div>
           </div>
         </>

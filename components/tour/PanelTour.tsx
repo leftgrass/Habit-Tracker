@@ -43,15 +43,19 @@ export function PanelTour({
 
   useEffect(() => {
     if (isMounted && !hasSeenTour && currentStep < steps.length) {
-      setIsVisible(true);
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [isMounted, hasSeenTour, currentStep, steps.length]);
 
   useEffect(() => {
     if (isVisible && step) {
-      updateTargetPosition();
+      const timer = setTimeout(updateTargetPosition, 50);
+      return () => clearTimeout(timer);
     }
-  }, [isVisible, currentStep]);
+  }, [isVisible, currentStep, step]);
 
   useEffect(() => {
     if (isVisible) {
@@ -76,12 +80,53 @@ export function PanelTour({
   const calculateTooltipPosition = (targetRect: DOMRect, position: string) => {
     const tooltipWidth = 300;
     const tooltipHeight = 180;
-    const gap = 12;
+    const gap = 16;
 
     let top = 0;
     let left = 0;
 
-    switch (position) {
+    const wouldOverlap = (pos: string) => {
+      let tooltipTop: number, tooltipLeft: number;
+
+      switch (pos) {
+        case 'top':
+          tooltipTop = targetRect.top - tooltipHeight - gap;
+          tooltipLeft = targetRect.left + (targetRect.width - tooltipWidth) / 2;
+          break;
+        case 'bottom':
+          tooltipTop = targetRect.bottom + gap;
+          tooltipLeft = targetRect.left + (targetRect.width - tooltipWidth) / 2;
+          break;
+        case 'left':
+          tooltipTop = targetRect.top + (targetRect.height - tooltipHeight) / 2;
+          tooltipLeft = targetRect.left - tooltipWidth - gap;
+          break;
+        case 'right':
+          tooltipTop = targetRect.top + (targetRect.height - tooltipHeight) / 2;
+          tooltipLeft = targetRect.right + gap;
+          break;
+        default:
+          return false;
+      }
+
+      const tooltipRight = tooltipLeft + tooltipWidth;
+      const tooltipBottom = tooltipTop + tooltipHeight;
+
+      return !(
+        tooltipRight <= targetRect.left ||
+        tooltipLeft >= targetRect.right ||
+        tooltipBottom <= targetRect.top ||
+        tooltipTop >= targetRect.bottom
+      );
+    };
+
+    let finalPosition = position;
+    if (wouldOverlap(position)) {
+      const alternatives = ['top', 'bottom', 'left', 'right'].filter(p => p !== position);
+      finalPosition = alternatives.find(p => !wouldOverlap(p)) || 'top';
+    }
+
+    switch (finalPosition) {
       case 'top':
         top = targetRect.top - tooltipHeight - gap;
         left = targetRect.left + (targetRect.width - tooltipWidth) / 2;
@@ -132,9 +177,11 @@ export function PanelTour({
 
   return (
     <>
+      <div className="fixed inset-0 z-[9998] bg-black/30" />
+
       {targetRect && (
         <div
-          className="absolute z-[100]"
+          className="fixed z-[9999]"
           style={{
             top: targetRect.top - 4,
             left: targetRect.left - 4,
@@ -152,7 +199,7 @@ export function PanelTour({
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute z-[101] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
+        className="fixed z-[10000] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
         style={{
           top: tooltipPosition.top,
           left: tooltipPosition.left,
