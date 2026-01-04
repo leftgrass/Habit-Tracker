@@ -6,10 +6,12 @@ import { X, TrendingUp, Calendar, Target, Award, Flame } from 'lucide-react';
 import { useHabitStore } from '@/store/useHabitStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { format, subDays, eachDayOfInterval } from 'date-fns';
+import { PanelTour } from '@/components/tour/PanelTour';
+import { ANALYTICS_TOUR_STEPS } from '@/components/tour/tourSteps';
 
 export function AnalyticsPanel() {
-  const { uiState, toggleAnalytics, habits } = useHabitStore();
-  const { isAnalyticsOpen } = uiState;
+  const { uiState, toggleAnalytics, habits, setAnalyticsTourCompleted, setAnalyticsTourStep, startAnalyticsTour } = useHabitStore();
+  const { isAnalyticsOpen, hasSeenAnalyticsTour, analyticsTourStep } = uiState;
 
   const activeHabits = useMemo(() => habits.filter(h => !h.isArchived), [habits]);
 
@@ -106,7 +108,7 @@ export function AnalyticsPanel() {
               className="h-full bg-[var(--card-bg)] shadow-2xl flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--card-border)]">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--card-border)]" data-analytics-tour="header">
                 <div>
                   <h2 className="text-xl font-semibold text-[var(--foreground)]">Analytics</h2>
                   <p className="text-sm text-[var(--muted)]">Track your progress and insights</p>
@@ -120,7 +122,7 @@ export function AnalyticsPanel() {
               </div>
 
               <div className="flex-1 overflow-y-auto p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" data-analytics-tour="stats">
                   <Card className="bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
                     <CardContent className="py-6">
                       <div className="flex items-center justify-between">
@@ -173,7 +175,7 @@ export function AnalyticsPanel() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                  <Card>
+                  <Card data-analytics-tour="heatmap">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <Calendar className="w-5 h-5" />
@@ -216,7 +218,7 @@ export function AnalyticsPanel() {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card data-analytics-tour="progress">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <TrendingUp className="w-5 h-5" />
@@ -262,7 +264,7 @@ export function AnalyticsPanel() {
                   </Card>
                 </div>
 
-                <Card>
+                <Card data-analytics-tour="rankings">
                   <CardHeader>
                     <CardTitle>Habit Rankings</CardTitle>
                   </CardHeader>
@@ -303,6 +305,16 @@ export function AnalyticsPanel() {
                   </CardContent>
                 </Card>
               </div>
+
+              <PanelTour
+                steps={ANALYTICS_TOUR_STEPS}
+                hasSeenTour={hasSeenAnalyticsTour}
+                currentStep={analyticsTourStep}
+                setTourCompleted={setAnalyticsTourCompleted}
+                setTourStep={setAnalyticsTourStep}
+                startTour={startAnalyticsTour}
+                onClose={() => toggleAnalytics(false)}
+              />
             </motion.div>
           </div>
         </>

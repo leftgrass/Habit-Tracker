@@ -119,6 +119,13 @@ export interface UIState {
   };
   hasSeenTour: boolean;
   tourCurrentStep: number;
+  // Feature-specific tour states
+  hasSeenCalendarTour: boolean;
+  calendarTourStep: number;
+  hasSeenAnalyticsTour: boolean;
+  analyticsTourStep: number;
+  hasSeenHabitTour: boolean;
+  habitTourStep: number;
 }
 
 export interface TourStep {
