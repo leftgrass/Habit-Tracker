@@ -117,6 +117,15 @@ export interface UIState {
     reminderTime: string;
     streakAlertsEnabled: boolean;
   };
+  hasSeenTour: boolean;
+  tourCurrentStep: number;
+}
+
+export interface TourStep {
+  target: string;
+  title: string;
+  content: string;
+  position: 'top' | 'bottom' | 'left' | 'right';
 }
 
 // Calendar event types for FullCalendar

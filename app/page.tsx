@@ -14,6 +14,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { CircularProgress } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
 import { ClientOnly } from '@/components/ui/ClientOnly';
+import { Tour } from '@/components/tour/Tour';
 
 export default function Home() {
   const { habits, toggleHabitModal, uiState, setViewMode, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
@@ -29,6 +30,7 @@ export default function Home() {
 
   return (
     <>
+      <Tour />
       <HabitModal />
       <SettingsPanel />
       <AnalyticsPanel />
@@ -55,6 +57,7 @@ export default function Home() {
               
               <div className="flex items-center space-x-4">
                 <Button
+                  data-tour="add-habit"
                   onClick={() => toggleHabitModal(true)}
                   className="flex items-center space-x-2"
                   style={{
@@ -72,7 +75,7 @@ export default function Home() {
         </header>
 
         <div className="container mx-auto px-4 py-8">
-          <div className={cn(
+          <div data-tour="stats" className={cn(
             "grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 transition-all duration-300",
             isAnyTimerRunning && "dimmed-element"
           )}>
@@ -106,7 +109,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className={cn(
+            <div data-tour="weekly-grid" className={cn(
               "lg:col-span-2 transition-all duration-300",
               isAnyTimerRunning && "timer-focused"
             )}>
@@ -119,7 +122,7 @@ export default function Home() {
             )}>
               <Card>
                 <CardContent className="py-6">
-                  <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Recent Achievements</h3>
+                  <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4" data-tour="achievements">Recent Achievements</h3>
                   <div className="space-y-3">
                     {recentAchievements.length === 0 ? (
                       <p className="text-[var(--muted)] text-center py-4">
@@ -156,6 +159,7 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Quick Actions</h3>
                   <div className="space-y-2">
                     <Button
+                      data-tour="calendar"
                       variant="outline"
                       className="w-full justify-start"
                       onClick={() => {
@@ -176,6 +180,7 @@ export default function Home() {
                       Analytics
                     </Button>
                     <Button
+                      data-tour="settings"
                       variant="outline"
                       className="w-full justify-start"
                       onClick={() => {

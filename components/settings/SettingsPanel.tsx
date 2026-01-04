@@ -7,6 +7,7 @@ import { useHabitStore } from '@/store/useHabitStore';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { TourButton } from '@/components/tour/Tour';
 
 function Toggle({ enabled, onChange, disabled = false }: { enabled: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
@@ -359,6 +360,17 @@ export function SettingsPanel() {
                         <p className="text-sm text-[var(--muted)]">
                           All your data is stored locally on your device. We never collect or share your personal information.
                         </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-4">
+                          <p className="text-sm text-[var(--muted)] text-center">
+                            Want a quick walkthrough of all features?
+                          </p>
+                          <TourButton />
+                        </div>
                       </CardContent>
                     </Card>
                   </motion.div>

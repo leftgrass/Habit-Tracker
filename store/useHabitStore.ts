@@ -34,6 +34,9 @@ interface HabitState {
   toggleSidebar: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
   setNotifications: (settings: { enabled?: boolean; reminderTime?: string; streakAlertsEnabled?: boolean }) => void;
+  setTourCompleted: () => void;
+  setTourStep: (step: number) => void;
+  startTour: () => void;
   startTimer: (habitId: string, date: string) => void;
   pauseTimer: () => void;
   resetTimer: () => void;
@@ -86,6 +89,8 @@ export const useHabitStore = create<HabitState>()(
           reminderTime: '09:00',
           streakAlertsEnabled: true,
         },
+        hasSeenTour: false,
+        tourCurrentStep: 0,
       },
       activeTimer: null,
 
@@ -404,6 +409,24 @@ export const useHabitStore = create<HabitState>()(
         }));
       },
 
+      setTourCompleted: () => {
+        set((state) => ({
+          uiState: { ...state.uiState, hasSeenTour: true },
+        }));
+      },
+
+      setTourStep: (step) => {
+        set((state) => ({
+          uiState: { ...state.uiState, tourCurrentStep: step },
+        }));
+      },
+
+      startTour: () => {
+        set((state) => ({
+          uiState: { ...state.uiState, hasSeenTour: false, tourCurrentStep: 0 },
+        }));
+      },
+
       getHabitStreak: (habitId) => {
         const habit = get().habits.find(h => h.id === habitId);
         return habit?.currentStreak || 0;
@@ -665,6 +688,12 @@ export const useHabitStore = create<HabitState>()(
               reminderTime: '09:00',
               streakAlertsEnabled: true,
             };
+          }
+          if (state.uiState.hasSeenTour === undefined) {
+            state.uiState.hasSeenTour = false;
+          }
+          if (state.uiState.tourCurrentStep === undefined) {
+            state.uiState.tourCurrentStep = 0;
           }
         }
       },
