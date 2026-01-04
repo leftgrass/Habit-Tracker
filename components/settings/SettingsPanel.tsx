@@ -30,7 +30,7 @@ export function SettingsPanel() {
   const { uiState, toggleSettings, setTheme, setNotifications, habits, deleteHabit } = useHabitStore();
   const { isSettingsOpen, theme, notifications } = uiState;
   const [activeTab, setActiveTab] = useState<'general' | 'data' | 'about'>('general');
-  const { permission, requestPermission, sendTestNotification } = useNotifications();
+  const { permission, requestPermission, sendTestNotification } = useNotifications(true);
 
   const handleEnableNotifications = async () => {
     const granted = await requestPermission();

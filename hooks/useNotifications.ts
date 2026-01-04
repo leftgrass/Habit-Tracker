@@ -8,7 +8,7 @@ interface NotificationSettings {
   streakAlertsEnabled: boolean;
 }
 
-export function useNotifications() {
+export function useNotifications(autoRequest = false) {
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const permissionRef = useRef<NotificationPermission>('default');
   const [isSupported, setIsSupported] = useState(false);
@@ -19,8 +19,15 @@ export function useNotifications() {
       const current = Notification.permission;
       setPermission(current);
       permissionRef.current = current;
+
+      if (autoRequest && current === 'default') {
+        Notification.requestPermission().then(result => {
+          setPermission(result);
+          permissionRef.current = result;
+        });
+      }
     }
-  }, []);
+  }, [autoRequest]);
 
   const requestPermission = useCallback(async () => {
     if (!('Notification' in window)) {
