@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf3e0;
+  --foreground: #3d342b;
+  --card-bg: #f5ebe0;
+  --card-border: #d4c5b0;
+  --primary: #c65d3b;
+  --primary-hover: #a84d2f;
+  --secondary: #ede0d4;
+  --accent: #a65a7b;
+  --success: #7a8c1c;
+  --warning: #b8860b;
+  --danger: #b32d25;
+  --muted: #8a7a6a;
+  --ring-offset: #faf3e0;
+  
+  --dim-overlay: rgba(0, 0, 0, 0.5);
+  --dim-backdrop-blur: blur(8px);
+  --dim-opacity: 0.7;
+  --timer-glow: rgba(198, 93, 59, 0.3);
+  --timer-glow-active: rgba(198, 93, 59, 0.85);
+  
+  --streak-color: #e53935;
+  
+  --logo-gradient-from: #d79921;
+  --logo-gradient-via: #fe8019;
+  --logo-gradient-to: #cc241d;
+  
+  --motivational-gradient-from: #faf3e0;
+  --motivational-gradient-via: #ffffff;
+  --motivational-gradient-to: #f5ebe0;
+}
+
+html.dark {
+  /* Tokyo Night Dark Theme */
+  --background: #1a1b26;
+  --foreground: #c0caf5;
+  --card-bg: #24283b;
+  --card-border: #414868;
+  --primary: #7aa2f7;
+  --primary-hover: #5d87e5;
+  --secondary: #1f2335;
+  --accent: #ad8ee6;
+  --success: #9ece6a;
+  --warning: #e0af68;
+  --danger: #f7768e;
+  --muted: #9ca8c8;
+  --ring-offset: #1a1b26;
+  
+  /* Dark theme dimming effect variables */
+  --dim-overlay: rgba(0, 0, 0, 0.75);
+  --dim-backdrop-blur: blur(10px);
+  --dim-opacity: 0.85;
+  --timer-glow: rgba(122, 162, 247, 0.4);
+  --timer-glow-active: rgba(122, 162, 247, 0.95);
+  
+  --streak-color: #e0af68;
+  
+  --logo-gradient-from: #7aa2f7;
+  --logo-gradient-via: #ad8ee6;
+  --logo-gradient-to: #bb9af7;
+  
+  --motivational-gradient-from: #e0e7ff;
+  --motivational-gradient-via: #ffffff;
+  --motivational-gradient-to: #c7d2fe;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Base component styles */
+html.dark .bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+html.dark .bg-gray-50 {
+  background-color: #2d3342 !important;
+}
+
+html.dark .bg-gray-100 {
+  background-color: var(--card-border) !important;
+}
+
+html.dark .bg-gray-200 {
+  background-color: #3b4261 !important;
+}
+
+html.dark .bg-gray-700 {
+  background-color: #414868 !important;
+}
+
+html.dark .bg-gray-800 {
+  background-color: var(--card-bg) !important;
+}
+
+html.dark .text-gray-900 {
+  color: var(--foreground) !important;
+}
+
+html.dark .text-gray-600 {
+  color: var(--muted) !important;
+}
+
+html.dark .text-gray-500 {
+  color: var(--muted) !important;
+}
+
+html.dark .text-gray-400 {
+  color: var(--muted) !important;
+}
+
+html.dark .text-gray-300 {
+  color: var(--foreground) !important;
+}
+
+html.dark .text-gray-700 {
+  color: var(--foreground) !important;
+}
+
+html.dark .border-gray-100 {
+  border-color: var(--card-border) !important;
+}
+
+html.dark .border-gray-200 {
+  border-color: var(--card-border) !important;
+}
+
+html.dark .border-gray-700 {
+  border-color: var(--card-border) !important;
+}
+
+html.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .ring-offset-gray-900 {
+  --tw-ring-offset-color: var(--ring-offset) !important;
+}
+
+/* Heatmap colors - Tokyo Night */
+html.dark .bg-gray-100.dark\:bg-gray-700 {
+  background-color: #414868 !important;
+}
+
+html.dark .bg-red-200.dark\:bg-red-900 {
+  background-color: #3d2a32 !important;
+}
+
+html.dark .bg-yellow-200.dark\:bg-yellow-900 {
+  background-color: #3d342a !important;
+}
+
+html.dark .bg-green-200.dark\:bg-green-900 {
+  background-color: #1d3a2a !important;
+}
+
+html.dark .bg-green-500 {
+  background-color: var(--success) !important;
+}
+
+html.dark .bg-green-400 {
+  background-color: #7bc96f !important;
+}
+
+html.dark .bg-yellow-400 {
+  background-color: var(--warning) !important;
+}
+
+html.dark .bg-red-400 {
+  background-color: var(--danger) !important;
+}
+
+/* Progress bar dark */
+html.dark .bg-gray-200.dark\:bg-gray-600 {
+  background-color: var(--card-border) !important;
+}
+
+html.dark .bg-indigo-600 {
+  background-color: var(--primary) !important;
+}
+
+/* Button dark variants */
+html.dark .bg-gray-100.dark\:bg-gray-700 {
+  background-color: var(--card-border) !important;
+}
+
+html.dark .bg-white.dark\:bg-gray-600 {
+  background-color: var(--card-bg) !important;
+}
+
+html.dark .text-indigo-600.dark\:text-indigo-400 {
+  color: var(--primary) !important;
+}
+
+html.dark .bg-indigo-100.dark\:bg-indigo-900\/50 {
+  background-color: rgba(122, 162, 247, 0.2) !important;
+}
+
+html.dark .border-indigo-500 {
+  border-color: var(--primary) !important;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Dark mode overrides */
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+html.dark body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+html.dark .bg-white {
+  background-color: #1a1a1a !important;
+}
+
+html.dark .bg-gray-50 {
+  background-color: #262626 !important;
+}
+
+html.dark .bg-gray-100 {
+  background-color: #404040 !important;
+}
+
+html.dark .bg-gray-200 {
+  background-color: #525252 !important;
+}
+
+html.dark .text-gray-900 {
+  color: #ededed !important;
+}
+
+html.dark .text-gray-600 {
+  color: #a3a3a3 !important;
+}
+
+html.dark .text-gray-500 {
+  color: #737373 !important;
+}
+
+html.dark .text-gray-700 {
+  color: #d4d4d4 !important;
+}
+
+html.dark .text-gray-400 {
+  color: #a3a3a3 !important;
+}
+
+html.dark .text-gray-300 {
+  color: #d4d4d4 !important;
+}
+
+html.dark .border-gray-100 {
+  border-color: #404040 !important;
+}
+
+html.dark .border-gray-200 {
+  border-color: #404040 !important;
+}
+
+html.dark .border-gray-700 {
+  border-color: #525252 !important;
+}
+
+html.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .ring-offset-gray-900 {
+  --tw-ring-offset-color: #1a1a1a !important;
+}
+
+/* Dimming effect classes */
+
+.timer-focused {
+  z-index: 20;
+  position: relative;
+}
+
+.timer-focused {
+  z-index: 20;
+  position: relative;
+}
+
+.timer-running-card {
+  background: var(--card-border) !important;
+  box-shadow: 0 0 35px var(--timer-glow-active),
+              0 8px 32px rgba(0, 0, 0, 0.2);
+  transform: scale(1.01);
+  transition: all 0.3s ease-out;
+}
+
+html.dark .timer-running-card {
+  background: #2d3342 !important;
+  box-shadow: 0 0 40px var(--timer-glow-active),
+              0 8px 32px rgba(0, 0, 0, 0.5),
+              inset 0 0 25px rgba(122, 162, 247, 0.15);
+}
+
+.logo-gradient {
+  background: linear-gradient(135deg, var(--logo-gradient-from) 0%, var(--logo-gradient-via) 50%, var(--logo-gradient-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.motivational-gradient {
+  background: linear-gradient(135deg, var(--motivational-gradient-from) 0%, var(--motivational-gradient-via) 50%, var(--motivational-gradient-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dimmed-element {
+  opacity: var(--dim-opacity);
+  filter: blur(3px);
+  transition: all 0.3s ease-out;
+}
+
+.dimmed-element:hover {
+  opacity: calc(var(--dim-opacity) + 0.15);
+}
+
+.timer-active-bg {
+  background: var(--background) !important;
+  transition: all 0.3s ease-out;
+}
+
+.streak-color {
+  color: #e53935 !important;
+}
+
+html.dark .streak-color {
+  color: #e0af68 !important;
+}
+
+.timer-active-card {
+  background: var(--card-bg) !important;
+  border-color: var(--primary) !important;
+  transition: all 0.3s ease-out;
+}
