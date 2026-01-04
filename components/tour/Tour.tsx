@@ -49,16 +49,21 @@ export function Tour() {
   const { uiState, setTourCompleted, setTourStep, startTour } = useHabitStore();
   const { hasSeenTour, tourCurrentStep } = uiState;
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const tourStep = TOUR_STEPS[tourCurrentStep];
 
   useEffect(() => {
-    // Only show tour if user hasn't seen it AND tour hasn't been completed
-    if (!hasSeenTour && tourCurrentStep < TOUR_STEPS.length) {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // Only show tour after mount, if user hasn't seen it, and tour is incomplete
+    if (isMounted && !hasSeenTour && tourCurrentStep < TOUR_STEPS.length) {
       setIsVisible(true);
     }
-  }, [hasSeenTour, tourCurrentStep]);
+  }, [isMounted, hasSeenTour, tourCurrentStep]);
 
   useEffect(() => {
     if (isVisible && tourStep) {
