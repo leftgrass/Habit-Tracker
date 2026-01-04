@@ -149,23 +149,19 @@ export function Tour() {
     <>
       {targetRect && (
         <div
-          className="fixed inset-0 z-[100] pointer-events-none"
-          style={{
-            boxShadow: `inset 0 0 0 9999px rgba(0, 0, 0, 0.6)`,
-          }}
-        />
-      )}
-
-      {targetRect && (
-        <div
-          className="absolute z-[101] border-2 border-[var(--primary)] rounded-lg"
+          className="absolute z-[100]"
           style={{
             top: targetRect.top - 8,
             left: targetRect.left - 8,
             width: targetRect.width + 16,
             height: targetRect.height + 16,
           }}
-        />
+        >
+          <div className="absolute inset-0 border-2 border-[var(--primary)] rounded-lg" />
+          <div
+            className="absolute inset-0 rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.6)]"
+          />
+        </div>
       )}
 
       <motion.div
