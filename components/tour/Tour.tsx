@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Play } from 'lucide-react';
 import { useHabitStore } from '@/store/useHabitStore';
 import { Button } from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
 
 export const TOUR_STEPS = [
   {
@@ -147,118 +146,100 @@ export function Tour() {
   if (!isVisible || !tourStep) return null;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-[100]">
-        {/* Overlay */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          onClick={handleSkip}
-        />
-
-        {/* Highlight effect */}
-        {targetRect && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="absolute border-2 border-[var(--primary)] rounded-lg shadow-2xl"
-            style={{
-              top: targetRect.top - 8,
-              left: targetRect.left - 8,
-              width: targetRect.width + 16,
-              height: targetRect.height + 16,
-            }}
-          />
-        )}
-
-        {/* Tooltip */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="absolute bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
+    <>
+      {targetRect && (
+        <div
+          className="absolute z-[100]"
           style={{
-            top: tooltipPosition.top,
-            left: tooltipPosition.left,
-            width: 320,
+            top: targetRect.top - 8,
+            left: targetRect.left - 8,
+            width: targetRect.width + 16,
+            height: targetRect.height + 16,
           }}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)] bg-[var(--secondary)]">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-[var(--foreground)]">
-                {tourCurrentStep + 1} of {TOUR_STEPS.length}
-              </span>
-            </div>
-            <button
-              onClick={handleSkip}
-              className="p-1 rounded hover:bg-[var(--card-border)] transition-colors"
-            >
-              <X className="w-4 h-4 text-[var(--muted)]" />
-            </button>
-          </div>
+          <div className="absolute inset-0 border-2 border-[var(--primary)] rounded-lg" />
+          <div
+            className="absolute inset-0 rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.6)]"
+            style={{ backdropFilter: 'blur(4px)' }}
+          />
+        </div>
+      )}
 
-          {/* Content */}
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">
-              {tourStep.title}
-            </h3>
-            <p className="text-sm text-[var(--muted)] leading-relaxed">
-              {tourStep.content}
-            </p>
-          </div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute z-[101] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
+        style={{
+          top: tooltipPosition.top,
+          left: tooltipPosition.left,
+          width: 320,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)] bg-[var(--secondary)]">
+          <span className="text-sm font-medium text-[var(--foreground)]">
+            {tourCurrentStep + 1} of {TOUR_STEPS.length}
+          </span>
+          <button
+            onClick={handleSkip}
+            className="p-1 rounded hover:bg-[var(--card-border)] transition-colors"
+          >
+            <X className="w-4 h-4 text-[var(--muted)]" />
+          </button>
+        </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--card-border)] bg-[var(--secondary)]">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSkip}
-              className="text-[var(--muted)]"
-            >
-              Skip
-            </Button>
-            <div className="flex items-center space-x-2">
-              {tourCurrentStep > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handlePrev}
-                  className="flex items-center space-x-1"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  <span>Prev</span>
-                </Button>
-              )}
+        <div className="p-4">
+          <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">
+            {tourStep.title}
+          </h3>
+          <p className="text-sm text-[var(--muted)] leading-relaxed">
+            {tourStep.content}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--card-border)] bg-[var(--secondary)]">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSkip}
+            className="text-[var(--muted)]"
+          >
+            Skip
+          </Button>
+          <div className="flex items-center space-x-2">
+            {tourCurrentStep > 0 && (
               <Button
-                variant="primary"
+                variant="ghost"
                 size="sm"
-                onClick={handleNext}
+                onClick={handlePrev}
                 className="flex items-center space-x-1"
               >
-                {tourCurrentStep === TOUR_STEPS.length - 1 ? (
-                  <>
-                    <span>Get Started</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Next</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </>
-                )}
+                <ChevronLeft className="w-4 h-4" />
+                <span>Prev</span>
               </Button>
-            </div>
+            )}
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleNext}
+              className="flex items-center space-x-1"
+            >
+              {tourCurrentStep === TOUR_STEPS.length - 1 ? (
+                <span>Get Started</span>
+              ) : (
+                <>
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </>
+              )}
+            </Button>
           </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+        </div>
+      </motion.div>
+    </>
   );
 }
 
-// Tour button to restart tour from settings or elsewhere
 export function TourButton() {
   const startTour = useHabitStore((state) => state.startTour);
 
