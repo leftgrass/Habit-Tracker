@@ -230,7 +230,14 @@ export function SettingsPanel() {
 
                               <Button 
                                 variant="outline" 
-                                onClick={sendTestNotification}
+                                onClick={() => {
+                                  if (permission === 'granted') {
+                                    new Notification('Habit Tracker', {
+                                      body: 'Notifications are working correctly!',
+                                      icon: '/icon-192.png',
+                                    });
+                                  }
+                                }}
                                 className="w-full"
                               >
                                 Send Test Notification
