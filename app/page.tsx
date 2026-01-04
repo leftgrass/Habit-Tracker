@@ -78,7 +78,7 @@ export default function Home() {
           )}>
             <Card hover>
               <CardContent className="text-center py-6">
-                <CircularProgress progress={stats.completionRate} size={80} color="var(--primary)" />
+                <CircularProgress progress={stats.weeklyCompletionRate} size={80} color="var(--primary)" />
                 <p className="text-sm text-[var(--muted)] mt-3">Weekly Progress</p>
               </CardContent>
             </Card>

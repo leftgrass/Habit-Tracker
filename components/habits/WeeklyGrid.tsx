@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useHabitStore } from '@/store/useHabitStore';
 import { format, addWeeks, subWeeks, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay, isBefore, startOfDay } from 'date-fns';
 import { cn, formatTimeWithSeconds } from '@/lib/utils';
-import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Trash2, Edit2, MoreVertical, ChevronLeft, ChevronRight, Clock, Flame, Trophy, ArrowUp, ArrowDown } from 'lucide-react';
 import { TimeTracker } from './TimeTracker';
 import { FocusedTimer } from './FocusedTimer';
@@ -178,27 +177,6 @@ function HabitCard({
         />
       </div>
 
-      <ProgressBar
-        progress={(() => {
-          const totalPossible = activeHabits.length * 7;
-          if (totalPossible === 0) return 0;
-
-          let completedDays = 0;
-          weekDates.forEach(date => {
-            const dateStr = format(date, 'yyyy-MM-dd');
-            activeHabits.forEach(h => {
-              const minutes = h.completions[dateStr] || 0;
-              if (minutes >= h.targetMinutes) {
-                completedDays++;
-              }
-            });
-          });
-
-          return (completedDays / totalPossible) * 100;
-        })()}
-        color={habit.color}
-        height={6}
-      />
     </motion.div>
   );
 }
@@ -267,6 +245,17 @@ export function WeeklyGrid() {
   });
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
   const { triggerConfetti } = useConfetti();
+
+  // Filter habits for the selected date based on scheduleDays
+  const habitsForSelectedDate = useMemo(() => {
+    const selectedDayName = format(selectedDate, 'EEE');
+    return activeHabits.filter(habit => {
+      // Daily habits show every day
+      if (habit.frequency === 'daily') return true;
+      // Weekly/custom habits only show on their scheduled days
+      return habit.scheduleDays.includes(selectedDayName);
+    });
+  }, [activeHabits, selectedDate]);
 
   const weekDates = useMemo(() => {
     const start = startOfWeek(currentWeekStart, { weekStartsOn: 0 });
@@ -437,22 +426,26 @@ export function WeeklyGrid() {
         </div>
 
         <div className="space-y-4">
-          {activeHabits.length === 0 ? (
+          {habitsForSelectedDate.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-4xl mb-4">🌱</div>
-              <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">No habits yet</h3>
-              <p className="text-[var(--muted)] mb-4">Start building better habits by adding your first one!</p>
+              <h3 className="text-lg font-medium text-[var(--foreground)] mb-2">No habits scheduled for today</h3>
+              <p className="text-[var(--muted)] mb-4">
+                {activeHabits.length > 0 
+                  ? "You don't have any habits scheduled for this day. Check your weekly schedule in habit settings."
+                  : "Start building better habits by adding your first one!"}
+              </p>
             </div>
           ) : (
             <AnimatePresence mode="popLayout">
-              {activeHabits.map((habit, index) => (
+              {habitsForSelectedDate.map((habit, index) => (
                 <HabitCard
                   key={habit.id}
                   habit={habit}
                   selectedDateStr={selectedDateStr}
                   isAnyTimerRunning={isAnyTimerRunning}
                   activeTimer={activeTimer}
-                  activeHabits={activeHabits}
+                  activeHabits={habitsForSelectedDate}
                   weekDates={weekDates}
                   onTimeChange={(mins, habitId, dateStr) => toggleHabitCompletion(habitId, dateStr, mins)}
                   onContextMenu={handleContextMenu}
@@ -462,7 +455,7 @@ export function WeeklyGrid() {
                   onMoveDown={moveHabitDown}
                   triggerConfetti={triggerConfetti}
                   isFirst={index === 0}
-                  isLast={index === activeHabits.length - 1}
+                  isLast={index === habitsForSelectedDate.length - 1}
                 />
               ))}
             </AnimatePresence>

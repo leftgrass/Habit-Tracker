@@ -42,7 +42,7 @@ interface HabitState {
   isTimerRunning: (habitId: string, date: string) => boolean;
   getCurrentTimer: () => RunningTimer | null;
   updateTimerProgress: (minutes: number) => void;
-  getWeeklyStats: () => { totalHabits: number; completedToday: number; completionRate: number; currentStreak: number };
+  getWeeklyStats: () => { totalHabits: number; completedToday: number; completionRate: number; weeklyCompletionRate: number; currentStreak: number };
   getHabitStreak: (habitId: string) => number;
   getWeeklyProgress: () => { date: string; completed: number; total: number }[];
   calculateStreakForDate: (habitId: string, date: string) => number;
@@ -425,18 +425,50 @@ export const useHabitStore = create<HabitState>()(
         const { habits, uiState } = get();
         const today = new Date();
         const todayStr = format(today, 'yyyy-MM-dd');
+        const todayDayName = format(today, 'EEE');
         const activeHabits = habits.filter(h => !h.isArchived);
+
+        // Filter to only habits scheduled for today (for daily stat)
+        const habitsScheduledToday = activeHabits.filter(habit => {
+          if (habit.frequency === 'daily') return true;
+          return habit.scheduleDays.includes(todayDayName);
+        });
+
         // A habit is "completed today" if minutes >= target
-        const completedToday = activeHabits.filter(h => (h.completions[todayStr] || 0) >= h.targetMinutes).length;
-        const totalHabits = activeHabits.length;
-        const completionRate = totalHabits > 0 ? (completedToday / totalHabits) * 100 : 0;
+        const completedToday = habitsScheduledToday.filter(h => (h.completions[todayStr] || 0) >= h.targetMinutes).length;
+        const totalHabitsScheduledToday = habitsScheduledToday.length;
+        const completionRate = totalHabitsScheduledToday > 0 ? (completedToday / totalHabitsScheduledToday) * 100 : 0;
+
+        // Calculate total weekly completion rate
+        const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1 });
+        const endOfCurrentWeek = endOfWeek(today, { weekStartsOn: 1 });
+        const weekDays = eachDayOfInterval({ start: startOfCurrentWeek, end: endOfCurrentWeek });
+
+        let weeklyCompleted = 0;
+        let weeklyTotal = 0;
+
+        weekDays.forEach(day => {
+          const dateStr = format(day, 'yyyy-MM-dd');
+          const dayName = format(day, 'EEE');
+
+          const habitsScheduledThisDay = activeHabits.filter(habit => {
+            if (habit.frequency === 'daily') return true;
+            return habit.scheduleDays.includes(dayName);
+          });
+
+          weeklyTotal += habitsScheduledThisDay.length;
+          weeklyCompleted += habitsScheduledThisDay.filter(h => (h.completions[dateStr] || 0) >= h.targetMinutes).length;
+        });
+
+        const weeklyCompletionRate = weeklyTotal > 0 ? (weeklyCompleted / weeklyTotal) * 100 : 0;
 
         const currentStreak = activeHabits.reduce((max, habit) => Math.max(max, habit.currentStreak), 0);
 
         return {
-          totalHabits,
+          totalHabits: totalHabitsScheduledToday,
           completedToday,
           completionRate,
+          weeklyCompletionRate,
           currentStreak,
         };
       },
@@ -452,11 +484,19 @@ export const useHabitStore = create<HabitState>()(
 
         return weekDays.map(day => {
           const dateStr = format(day, 'yyyy-MM-dd');
-          const completed = activeHabits.filter(h => (h.completions[dateStr] || 0) >= h.targetMinutes).length;
+          const dayName = format(day, 'EEE');
+          
+          // Filter to only habits scheduled for this day
+          const habitsScheduledThisDay = activeHabits.filter(habit => {
+            if (habit.frequency === 'daily') return true;
+            return habit.scheduleDays.includes(dayName);
+          });
+
+          const completed = habitsScheduledThisDay.filter(h => (h.completions[dateStr] || 0) >= h.targetMinutes).length;
           return {
             date: dateStr,
             completed,
-            total: activeHabits.length,
+            total: habitsScheduledThisDay.length,
           };
         });
       },
