@@ -32,6 +32,9 @@ export function SettingsPanel() {
   const [activeTab, setActiveTab] = useState<'general' | 'data' | 'about'>('general');
   const { permission, requestPermission, sendTestNotification } = useNotifications(true);
 
+  // Defensive: ensure notifications exists
+  const safeNotifications = notifications || { enabled: false, reminderTime: '09:00', streakAlertsEnabled: true };
+
   const handleEnableNotifications = async () => {
     const granted = await requestPermission();
     if (granted) {
@@ -197,7 +200,7 @@ export function SettingsPanel() {
                                   <p className="text-sm text-[var(--muted)]">Get reminded to complete your habits</p>
                                 </div>
                                 <Toggle 
-                                  enabled={notifications.enabled} 
+                                  enabled={safeNotifications.enabled} 
                                   onChange={(v) => setNotifications({ enabled: v })}
                                 />
                               </div>
@@ -208,12 +211,12 @@ export function SettingsPanel() {
                                     <p className="font-medium text-[var(--foreground)]">Reminder Time</p>
                                     <p className="text-sm text-[var(--muted)]">When to send daily reminders</p>
                                   </div>
-                                  <input
-                                    type="time"
-                                    value={notifications.reminderTime}
-                                    onChange={(e) => setNotifications({ reminderTime: e.target.value })}
-                                    className="px-3 py-2 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] text-[var(--foreground)]"
-                                  />
+                                    <input
+                                      type="time"
+                                      value={safeNotifications.reminderTime}
+                                      onChange={(e) => setNotifications({ reminderTime: e.target.value })}
+                                      className="px-3 py-2 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] text-[var(--foreground)]"
+                                    />
                                 </div>
                               )}
 
@@ -223,7 +226,7 @@ export function SettingsPanel() {
                                   <p className="text-sm text-[var(--muted)]">Don&apos;t lose your streak!</p>
                                 </div>
                                 <Toggle 
-                                  enabled={notifications.streakAlertsEnabled} 
+                                  enabled={safeNotifications.streakAlertsEnabled} 
                                   onChange={(v) => setNotifications({ streakAlertsEnabled: v })}
                                 />
                               </div>

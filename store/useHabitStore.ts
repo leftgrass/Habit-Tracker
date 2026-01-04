@@ -659,6 +659,13 @@ export const useHabitStore = create<HabitState>()(
           if (!state.uiState.floatingTimerPosition) {
             state.uiState.floatingTimerPosition = { x: 20, y: 20 };
           }
+          if (!state.uiState.notifications) {
+            state.uiState.notifications = {
+              enabled: false,
+              reminderTime: '09:00',
+              streakAlertsEnabled: true,
+            };
+          }
         }
       },
     }
