@@ -33,6 +33,7 @@ interface HabitState {
   setSelectedDate: (date: string) => void;
   toggleSidebar: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
+  setNotifications: (settings: { enabled?: boolean; reminderTime?: string; streakAlertsEnabled?: boolean }) => void;
   startTimer: (habitId: string, date: string) => void;
   pauseTimer: () => void;
   resetTimer: () => void;
@@ -80,6 +81,11 @@ export const useHabitStore = create<HabitState>()(
         focusedTimer: { habitId: null, date: null },
         floatingTimer: { habitId: null, date: null },
         floatingTimerPosition: { x: 20, y: 20 },
+        notifications: {
+          enabled: false,
+          reminderTime: '09:00',
+          streakAlertsEnabled: true,
+        },
       },
       activeTimer: null,
 
@@ -386,6 +392,15 @@ export const useHabitStore = create<HabitState>()(
       setTheme: (theme) => {
         set((state) => ({
           uiState: { ...state.uiState, theme },
+        }));
+      },
+
+      setNotifications: (settings) => {
+        set((state) => ({
+          uiState: {
+            ...state.uiState,
+            notifications: { ...state.uiState.notifications, ...settings },
+          },
         }));
       },
 

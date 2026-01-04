@@ -112,6 +112,11 @@ export interface UIState {
     x: number;
     y: number;
   };
+  notifications: {
+    enabled: boolean;
+    reminderTime: string;
+    streakAlertsEnabled: boolean;
+  };
 }
 
 // Calendar event types for FullCalendar

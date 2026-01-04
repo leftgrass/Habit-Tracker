@@ -4,13 +4,40 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Moon, Sun, Trash2, Download, Upload, Bell, Lock, HelpCircle, Info, Database } from 'lucide-react';
 import { useHabitStore } from '@/store/useHabitStore';
+import { useNotifications } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 
+function Toggle({ enabled, onChange, disabled = false }: { enabled: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
+  return (
+    <button
+      onClick={() => onChange(!enabled)}
+      disabled={disabled}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+        enabled ? 'bg-[var(--primary)]' : 'bg-[var(--secondary)]'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+    >
+      <span
+        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+          enabled ? 'translate-x-6' : 'translate-x-1'
+        }`}
+      />
+    </button>
+  );
+}
+
 export function SettingsPanel() {
-  const { uiState, toggleSettings, setTheme, habits, deleteHabit } = useHabitStore();
-  const { isSettingsOpen, theme } = uiState;
+  const { uiState, toggleSettings, setTheme, setNotifications, habits, deleteHabit } = useHabitStore();
+  const { isSettingsOpen, theme, notifications } = uiState;
   const [activeTab, setActiveTab] = useState<'general' | 'data' | 'about'>('general');
+  const { permission, requestPermission, sendTestNotification } = useNotifications();
+
+  const handleEnableNotifications = async () => {
+    const granted = await requestPermission();
+    if (granted) {
+      setNotifications({ enabled: true });
+    }
+  };
 
   if (!isSettingsOpen) return null;
 
@@ -135,34 +162,83 @@ export function SettingsPanel() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center space-x-2">
-                          <Bell className="w-5 h-5" />
-                          <span>Notifications</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-[var(--foreground)]">Daily Reminders</p>
-                            <p className="text-sm text-[var(--muted)]">Get reminded to complete your habits</p>
-                          </div>
-                          <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-[var(--secondary)]">
-                            <span className="inline-block h-4 w-4 transform rounded-full bg-[var(--card-bg)] transition translate-x-1" />
-                          </button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-[var(--foreground)]">Streak Alerts</p>
-                            <p className="text-sm text-[var(--muted)]">Don't lose your streak!</p>
-                          </div>
-                          <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-[var(--primary)]">
-                            <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6" />
-                          </button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center space-x-2">
+                            <Bell className="w-5 h-5" />
+                            <span>Notifications</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {permission !== 'granted' && (
+                            <div className="p-3 bg-[var(--secondary)] rounded-lg">
+                              <p className="text-sm text-[var(--foreground)] mb-2">
+                                {permission === 'denied' 
+                                  ? 'Notifications are blocked. Please enable them in your browser settings.'
+                                  : 'Enable notifications to receive habit reminders'}
+                              </p>
+                              {permission !== 'denied' && (
+                                <Button 
+                                  variant="primary" 
+                                  onClick={handleEnableNotifications}
+                                  className="w-full"
+                                >
+                                  Enable Notifications
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                          
+                          {permission === 'granted' && (
+                            <>
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-medium text-[var(--foreground)]">Daily Reminders</p>
+                                  <p className="text-sm text-[var(--muted)]">Get reminded to complete your habits</p>
+                                </div>
+                                <Toggle 
+                                  enabled={notifications.enabled} 
+                                  onChange={(v) => setNotifications({ enabled: v })}
+                                />
+                              </div>
+
+                              {notifications.enabled && (
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-medium text-[var(--foreground)]">Reminder Time</p>
+                                    <p className="text-sm text-[var(--muted)]">When to send daily reminders</p>
+                                  </div>
+                                  <input
+                                    type="time"
+                                    value={notifications.reminderTime}
+                                    onChange={(e) => setNotifications({ reminderTime: e.target.value })}
+                                    className="px-3 py-2 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] text-[var(--foreground)]"
+                                  />
+                                </div>
+                              )}
+
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-medium text-[var(--foreground)]">Streak Alerts</p>
+                                  <p className="text-sm text-[var(--muted)]">Don&apos;t lose your streak!</p>
+                                </div>
+                                <Toggle 
+                                  enabled={notifications.streakAlertsEnabled} 
+                                  onChange={(v) => setNotifications({ streakAlertsEnabled: v })}
+                                />
+                              </div>
+
+                              <Button 
+                                variant="outline" 
+                                onClick={sendTestNotification}
+                                className="w-full"
+                              >
+                                Send Test Notification
+                              </Button>
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
                   </motion.div>
                 )}
 
