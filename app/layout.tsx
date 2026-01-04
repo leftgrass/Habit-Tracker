@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Habit Tracker",
+  title: "Habit Tracker | presented by leftgrass",
   description: "Track your daily habits and build streaks",
   openGraph: {
-    title: "Habit Tracker",
+    title: "Habit Tracker | presented by leftgrass",
     description: "Track your daily habits and build streaks",
     siteName: "Habit Tracker",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Habit Tracker",
+    title: "Habit Tracker | presented by leftgrass",
     description: "Track your daily habits and build streaks",
   },
 };
