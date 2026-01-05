@@ -1,17 +1,20 @@
 import { useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { useSound } from './useSound';
 
 export function useConfetti() {
   const hasTriggeredRef = useRef<Set<string>>(new Set());
+  const { playSuccessSound, playAchievementSound } = useSound();
 
   const triggerConfetti = useCallback((habitId: string, date: string) => {
     const key = `${habitId}-${date}`;
     
-    // Only trigger once per habit-date combination
     if (hasTriggeredRef.current.has(key)) {
       return;
     }
     hasTriggeredRef.current.add(key);
+
+    playSuccessSound();
 
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
@@ -52,6 +55,8 @@ export function useConfetti() {
   };
 
   const triggerAchievementConfetti = useCallback(() => {
+    playAchievementSound();
+
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
