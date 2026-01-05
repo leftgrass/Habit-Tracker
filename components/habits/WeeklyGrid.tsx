@@ -33,6 +33,7 @@ interface HabitCardProps {
   onMoveUp: (habitId: string) => void;
   onMoveDown: (habitId: string) => void;
   triggerConfetti: (habitId: string, date: string) => void;
+  resetTrigger: (habitId: string, date: string) => void;
   isFirst: boolean;
   isLast: boolean;
 }
@@ -51,6 +52,7 @@ function HabitCard({
   onMoveUp,
   onMoveDown,
   triggerConfetti,
+  resetTrigger,
   isFirst,
   isLast,
 }: HabitCardProps) {
@@ -63,6 +65,8 @@ function HabitCard({
 
     if (mins >= habit.targetMinutes && !isCompleted) {
       triggerConfetti(habit.id, selectedDateStr);
+    } else if (mins < habit.targetMinutes && isCompleted) {
+      resetTrigger(habit.id, selectedDateStr);
     }
   };
 
@@ -244,7 +248,7 @@ export function WeeklyGrid() {
     return start;
   });
   const [selectedDate, setSelectedDate] = useState(() => startOfDay(new Date()));
-  const { triggerConfetti } = useConfetti();
+  const { triggerConfetti, resetTrigger } = useConfetti();
 
   // Filter habits for the selected date based on scheduleDays
   const habitsForSelectedDate = useMemo(() => {
@@ -454,6 +458,7 @@ export function WeeklyGrid() {
                   onMoveUp={moveHabitUp}
                   onMoveDown={moveHabitDown}
                   triggerConfetti={triggerConfetti}
+                  resetTrigger={resetTrigger}
                   isFirst={index === 0}
                   isLast={index === habitsForSelectedDate.length - 1}
                 />
