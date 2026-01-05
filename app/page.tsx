@@ -139,20 +139,19 @@ export default function Home() {
                      animate={{ opacity: 1, x: 0 }}
                      transition={{ delay: 0.2 }}
                      className="flex-shrink-0"
-                     data-tour="add-habit"
                    >
-                     <Button
-                       onClick={() => toggleHabitModal(true)}
-                      className="flex items-center space-x-2 shadow-lg shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 transition-all duration-300 hover:scale-105"
-                      style={{
-                        backgroundColor: 'var(--primary)',
-                        color: 'white',
-                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
-                      }}
-                    >
-                      <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
-                      <span style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
-                    </Button>
+                      <Button
+                        onClick={() => toggleHabitModal(true)}
+                        className="flex items-center space-x-2 shadow-lg shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 transition-all duration-300 hover:scale-105"
+                        style={{
+                          backgroundColor: 'var(--primary)',
+                          color: 'white',
+                          textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
+                        }}
+                      >
+                        <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
+                        <span data-tour="add-habit" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
+                      </Button>
                   </motion.div>
                 </div>
               </div>
