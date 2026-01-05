@@ -119,8 +119,6 @@ export interface UIState {
   };
   hasSeenTour: boolean;
   tourCurrentStep: number;
-  hasSeenHabitTour: boolean;
-  habitTourStep: number;
 }
 
 export interface TourStep {

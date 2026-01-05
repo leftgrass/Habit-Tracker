@@ -37,9 +37,6 @@ interface HabitState {
   setTourCompleted: () => void;
   setTourStep: (step: number) => void;
   startTour: () => void;
-  setHabitTourCompleted: () => void;
-  setHabitTourStep: (step: number) => void;
-  startHabitTour: () => void;
   startTimer: (habitId: string, date: string) => void;
   pauseTimer: () => void;
   resetTimer: () => void;
@@ -94,8 +91,6 @@ export const useHabitStore = create<HabitState>()(
         },
         hasSeenTour: false,
         tourCurrentStep: 0,
-        hasSeenHabitTour: false,
-        habitTourStep: 0,
       },
       activeTimer: null,
 
@@ -433,24 +428,6 @@ export const useHabitStore = create<HabitState>()(
         }));
       },
 
-      setHabitTourCompleted: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenHabitTour: true },
-        }));
-      },
-
-      setHabitTourStep: (step) => {
-        set((state) => ({
-          uiState: { ...state.uiState, habitTourStep: step },
-        }));
-      },
-
-      startHabitTour: () => {
-        set((state) => ({
-          uiState: { ...state.uiState, hasSeenHabitTour: false, habitTourStep: 0 },
-        }));
-      },
-
       getHabitStreak: (habitId) => {
         const habit = get().habits.find(h => h.id === habitId);
         return habit?.currentStreak || 0;
@@ -718,12 +695,6 @@ export const useHabitStore = create<HabitState>()(
           }
           if (state.uiState.tourCurrentStep === undefined) {
             state.uiState.tourCurrentStep = 0;
-          }
-          if (state.uiState.hasSeenHabitTour === undefined) {
-            state.uiState.hasSeenHabitTour = false;
-          }
-          if (state.uiState.habitTourStep === undefined) {
-            state.uiState.habitTourStep = 0;
           }
         }
       },
