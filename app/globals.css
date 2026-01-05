@@ -388,3 +388,14 @@ html.dark .streak-color {
   border-color: var(--primary) !important;
   transition: all 0.3s ease-out;
 }
+
+/* Mobile safe area padding for bottom navigation */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Touch optimization for mobile */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}

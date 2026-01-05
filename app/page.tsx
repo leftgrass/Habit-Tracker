@@ -16,9 +16,10 @@ import { cn } from '@/lib/utils';
 import { ClientOnly } from '@/components/ui/ClientOnly';
 import { Tour } from '@/components/tour/Tour';
 import { AchievementConfetti } from '@/components/AchievementConfetti';
+import { MobileNav, MobileFab } from '@/components/MobileNav';
 
 export default function Home() {
-  const { habits, toggleHabitModal, uiState, setViewMode, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
+  const { habits, toggleHabitModal, uiState, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const activeHabits = habits.filter(h => !h.isArchived);
   const stats = getWeeklyStats();
@@ -37,197 +38,261 @@ export default function Home() {
       <SettingsPanel />
       <AnalyticsPanel />
       <CalendarPanel />
-        <ClientOnly>
-          <div className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--card-bg)] to-[var(--background)] transition-all duration-300">
+      <ClientOnly>
+        <MobileNav />
+        <MobileFab />
+        <div className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--card-bg)] to-[var(--background)] transition-all duration-300 pb-24 md:pb-0">
           <header className={cn(
-            "sticky top-0 z-40 bg-[var(--card-bg)]/80 backdrop-blur-lg border-b border-[var(--card-border)] transition-all duration-300",
+            "sticky top-0 z-40 bg-[var(--card-bg)]/80 backdrop-blur-lg border-b border-[var(--card-border)] transition-all duration-300 hidden md:block",
             isAnyTimerRunning && "dimmed-element"
           )}>
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="lg:hidden p-2 rounded-lg hover:bg-[var(--secondary)]"
-                >
-                  {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </button>
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="lg:hidden p-2 rounded-lg hover:bg-[var(--secondary)]"
+                  >
+                    {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                  </button>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--logo-gradient-from)] via-[var(--logo-gradient-via)] to-[var(--logo-gradient-to)] bg-clip-text text-transparent logo-gradient">
                     Habit Tracker
                   </h1>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <Button
-                  data-tour="add-habit"
-                  onClick={() => toggleHabitModal(true)}
-                  className="flex items-center space-x-2"
-                  style={{
-                    backgroundColor: 'var(--primary)',
-                    color: 'white',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
-                  }}
-                >
-                  <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
-                  <span className="hidden sm:inline" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <div className="container mx-auto px-4 py-8">
-          <div data-tour="stats" className={cn(
-            "grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 transition-all duration-300",
-            isAnyTimerRunning && "dimmed-element"
-          )}>
-            <Card hover>
-              <CardContent className="text-center py-6">
-                <CircularProgress progress={stats.weeklyCompletionRate} size={80} color="var(--primary)" />
-                <p className="text-sm text-[var(--muted)] mt-3">Weekly Progress</p>
-              </CardContent>
-            </Card>
-            
-            <Card hover>
-              <CardContent className="text-center py-6">
-                <p className="text-4xl font-bold text-[var(--foreground)]">{activeHabits.length}</p>
-                <p className="text-sm text-[var(--muted)] mt-3">Active Habits</p>
-              </CardContent>
-            </Card>
-            
-            <Card hover>
-              <CardContent className="text-center py-6">
-                <p className="text-4xl font-bold text-[var(--success)]">{stats.completedToday}</p>
-                <p className="text-sm text-[var(--muted)] mt-3">Completed Today</p>
-              </CardContent>
-            </Card>
-            
-            <Card hover>
-              <CardContent className="text-center py-6">
-                <p className="text-4xl font-bold streak-color">+{stats.currentStreak}</p>
-                <p className="text-sm text-[var(--muted)] mt-3">Best Streak</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div data-tour="weekly-grid" className={cn(
-              "lg:col-span-2 transition-all duration-300",
-              isAnyTimerRunning && "timer-focused"
-            )}>
-              <WeeklyGrid />
-            </div>
-
-            <div className={cn(
-              "space-y-6 transition-opacity duration-300",
-              isAnyTimerRunning && "dimmed-element"
-            )}>
-              <Card>
-                <CardContent className="py-6">
-                  <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4" data-tour="achievements">Recent Achievements</h3>
-                  <div className="space-y-3">
-                    {recentAchievements.length === 0 ? (
-                      <p className="text-[var(--muted)] text-center py-4">
-                        Complete habits to unlock achievements!
-                      </p>
-                    ) : (
-                      recentAchievements.map((achievement) => (
-                        <motion.div
-                          key={achievement.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="flex items-center space-x-3 p-3 bg-[var(--secondary)] rounded-lg"
-                        >
-                          <span className="text-2xl">{achievement.icon}</span>
-                          <div className="flex-1">
-                            <p className="font-medium text-[var(--foreground)]">{achievement.name}</p>
-                            <p className="text-xs text-[var(--muted)]">{achievement.description}</p>
-                            <div className="w-full bg-[var(--card-border)] rounded-full h-1.5 mt-2">
-                              <div
-                                className="bg-[var(--primary)] h-1.5 rounded-full transition-all"
-                                style={{ width: `${(achievement.progress / achievement.target) * 100}%` }}
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="py-6">
-                  <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Quick Actions</h3>
-                  <div className="space-y-2">
-                    <Button
-                      data-tour="add-habit"
-                      variant="primary"
-                      className="flex items-center space-x-2"
-                      onClick={() => {
-                        toggleHabitModal(true);
-                      }}
-                    >
-                      <Plus className="w-5 h-5 mr-2" />
-                      Add Habit
-                    </Button>
-                    <Button
-                      data-tour="calendar"
-                      variant="outline"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        toggleCalendar(true);
-                      }}
-                    >
-                      <Calendar className="w-5 h-5 mr-2" />
-                      View Calendar
-                    </Button>
-                    <Button
-                      data-tour="analytics"
-                      variant="outline"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        toggleAnalytics(true);
-                      }}
-                    >
-                      <BarChart3 className="w-5 h-5 mr-2" />
-                      Analytics
-                    </Button>
-                    <Button
-                      data-tour="settings"
-                      variant="outline"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        toggleSettings(true);
-                      }}
-                    >
-                      <Settings className="w-5 h-5 mr-2" />
-                      Settings
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card data-tour="quote" className="bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
-                <CardContent className="py-6">
-                  <p 
-                    className="text-lg font-medium text-white text-center"
+                </div>
+                
+                <div className="flex items-center space-x-4">
+                  <Button
+                    data-tour="add-habit"
+                    onClick={() => toggleHabitModal(true)}
+                    className="flex items-center space-x-2"
                     style={{
+                      backgroundColor: 'var(--primary)',
+                      color: 'white',
                       textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
                     }}
                   >
-                    {stats.completionRate === 100
-                      ? "Amazing! You are on fire! "
-                      : stats.completionRate >= 50
-                      ? "Great progress! Keep it up! "
-                      : "Every small step counts. You have got this! "}
-                  </p>
+                    <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
+                    <span style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div className="container mx-auto px-4 py-4 md:py-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300">
+              <Card hover>
+                <CardContent className="text-center py-4 md:py-6">
+                  <CircularProgress progress={stats.weeklyCompletionRate} size={60} md:size={80} color="var(--primary)" />
+                  <p className="text-xs md:text-sm text-[var(--muted)] mt-2 md:mt-3">Weekly Progress</p>
+                </CardContent>
+              </Card>
+              
+              <Card hover>
+                <CardContent className="text-center py-4 md:py-6">
+                  <p className="text-2xl md:text-4xl font-bold text-[var(--foreground)]">{activeHabits.length}</p>
+                  <p className="text-xs md:text-sm text-[var(--muted)] mt-2 md:mt-3">Active Habits</p>
+                </CardContent>
+              </Card>
+              
+              <Card hover>
+                <CardContent className="text-center py-4 md:py-6">
+                  <p className="text-2xl md:text-4xl font-bold text-[var(--success)]">{stats.completedToday}</p>
+                  <p className="text-xs md:text-sm text-[var(--muted)] mt-2 md:mt-3">Completed Today</p>
+                </CardContent>
+              </Card>
+              
+              <Card hover>
+                <CardContent className="text-center py-4 md:py-6">
+                  <p className="text-2xl md:text-4xl font-bold streak-color">+{stats.currentStreak}</p>
+                  <p className="text-xs md:text-sm text-[var(--muted)] mt-2 md:mt-3">Best Streak</p>
                 </CardContent>
               </Card>
             </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+              <div data-tour="weekly-grid" className={cn(
+                "lg:col-span-2 transition-all duration-300 order-2 md:order-1",
+                isAnyTimerRunning && "timer-focused"
+              )}>
+                <WeeklyGrid />
+              </div>
+
+              <div className={cn(
+                "space-y-4 md:space-y-6 transition-opacity duration-300 order-1 md:order-2",
+                isAnyTimerRunning && "dimmed-element"
+              )}>
+                <Card className="md:hidden">
+                  <CardContent className="py-4">
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4" data-tour="achievements">Recent Achievements</h3>
+                    {recentAchievements.length === 0 ? (
+                      <p className="text-[var(--muted)] text-center py-2">
+                        Complete habits to unlock achievements!
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {recentAchievements.slice(0, 2).map((achievement) => (
+                          <motion.div
+                            key={achievement.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center space-x-3 p-3 bg-[var(--secondary)] rounded-lg"
+                          >
+                            <span className="text-xl">{achievement.icon}</span>
+                            <div className="flex-1">
+                              <p className="font-medium text-[var(--foreground)] text-sm">{achievement.name}</p>
+                              <div className="w-full bg-[var(--card-border)] rounded-full h-1.5 mt-1">
+                                <div
+                                  className="bg-[var(--primary)] h-1.5 rounded-full transition-all"
+                                  style={{ width: `${(achievement.progress / achievement.target) * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="hidden md:block">
+                  <CardContent className="py-6">
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4" data-tour="achievements">Recent Achievements</h3>
+                    <div className="space-y-3">
+                      {recentAchievements.length === 0 ? (
+                        <p className="text-[var(--muted)] text-center py-4">
+                          Complete habits to unlock achievements!
+                        </p>
+                      ) : (
+                        recentAchievements.map((achievement) => (
+                          <motion.div
+                            key={achievement.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center space-x-3 p-3 bg-[var(--secondary)] rounded-lg"
+                          >
+                            <span className="text-2xl">{achievement.icon}</span>
+                            <div className="flex-1">
+                              <p className="font-medium text-[var(--foreground)]">{achievement.name}</p>
+                              <p className="text-xs text-[var(--muted)]">{achievement.description}</p>
+                              <div className="w-full bg-[var(--card-border)] rounded-full h-1.5 mt-2">
+                                <div
+                                  className="bg-[var(--primary)] h-1.5 rounded-full transition-all"
+                                  style={{ width: `${(achievement.progress / achievement.target) * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="md:hidden">
+                  <CardContent className="py-4">
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Quick Actions</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant="primary"
+                        onClick={() => toggleHabitModal(true)}
+                        className="py-3"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => toggleCalendar(true)}
+                        className="py-3"
+                      >
+                        <Calendar className="w-4 h-4 mr-1" />
+                        Calendar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => toggleAnalytics(true)}
+                        className="py-3"
+                      >
+                        <BarChart3 className="w-4 h-4 mr-1" />
+                        Stats
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => toggleSettings(true)}
+                        className="py-3"
+                      >
+                        <Settings className="w-4 h-4 mr-1" />
+                        Settings
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="hidden md:block">
+                  <CardContent className="py-6">
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Quick Actions</h3>
+                    <div className="space-y-2">
+                      <Button
+                        data-tour="add-habit"
+                        variant="primary"
+                        className="flex items-center space-x-2 w-full"
+                        onClick={() => toggleHabitModal(true)}
+                      >
+                        <Plus className="w-5 h-5 mr-2" />
+                        Add Habit
+                      </Button>
+                      <Button
+                        data-tour="calendar"
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => toggleCalendar(true)}
+                      >
+                        <Calendar className="w-5 h-5 mr-2" />
+                        View Calendar
+                      </Button>
+                      <Button
+                        data-tour="analytics"
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => toggleAnalytics(true)}
+                      >
+                        <BarChart3 className="w-5 h-5 mr-2" />
+                        Analytics
+                      </Button>
+                      <Button
+                        data-tour="settings"
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => toggleSettings(true)}
+                      >
+                        <Settings className="w-5 h-5 mr-2" />
+                        Settings
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card data-tour="quote" className="bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
+                  <CardContent className="py-4 md:py-6">
+                    <p 
+                      className="text-base md:text-lg font-medium text-white text-center"
+                      style={{
+                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
+                      }}
+                    >
+                      {stats.completionRate === 100
+                        ? "Amazing! You are on fire!"
+                        : stats.completionRate >= 50
+                        ? "Great progress! Keep it up!"
+                        : "Every small step counts. You've got this!"}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
       </ClientOnly>
     </>
   );
