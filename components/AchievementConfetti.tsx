@@ -15,9 +15,9 @@ export function AchievementConfetti() {
       if (achievement.progress < achievement.target) return;
 
       const key = `celebrated-${achievement.id}`;
-      if (sessionStorage.getItem(key)) return;
+      if (localStorage.getItem(key)) return;
 
-      sessionStorage.setItem(key, 'true');
+      localStorage.setItem(key, 'true');
       triggerAchievementConfetti();
     });
   }, [achievements, triggerAchievementConfetti]);
