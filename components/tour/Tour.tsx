@@ -86,9 +86,13 @@ export function Tour() {
 
   useEffect(() => {
     if (isVisible && tourStep) {
-      updateTargetPosition();
-      const timeout = setTimeout(updateTargetPosition, 50);
-      return () => clearTimeout(timeout);
+      let frame1 = requestAnimationFrame(() => {
+        let frame2 = requestAnimationFrame(() => {
+          updateTargetPosition();
+        });
+        return () => cancelAnimationFrame(frame2);
+      });
+      return () => cancelAnimationFrame(frame1);
     }
   }, [isVisible, tourCurrentStep]);
 
