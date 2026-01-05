@@ -80,7 +80,13 @@ export function Tour() {
   useEffect(() => {
     // Only show tour after mount, if user hasn't seen it, and tour is incomplete
     if (isMounted && !hasSeenTour && tourCurrentStep < TOUR_STEPS.length) {
-      setIsVisible(true);
+      let frame1 = requestAnimationFrame(() => {
+        let frame2 = requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+        return () => cancelAnimationFrame(frame2);
+      });
+      return () => cancelAnimationFrame(frame1);
     }
   }, [isMounted, hasSeenTour, tourCurrentStep]);
 
