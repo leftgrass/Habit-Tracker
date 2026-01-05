@@ -78,7 +78,7 @@ export default function Home() {
                     transition={{ delay: 0.1 }}
                     className="flex justify-start -ml-28"
                   >
-                     <div className="bg-[var(--secondary)]/60 backdrop-blur-sm rounded-2xl pl-5 pr-6 py-3 border border-[var(--card-border)]/50 -ml-1">
+                      <div className="bg-[var(--secondary)]/60 backdrop-blur-sm rounded-2xl pl-5 pr-6 py-3 border border-[var(--card-border)]/50 -ml-1" data-tour="header-stats">
                       <div className="flex items-center gap-6">
                         {/* Greeting */}
                         <div className="flex items-center gap-3">

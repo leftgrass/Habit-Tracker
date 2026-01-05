@@ -14,6 +14,12 @@ export const TOUR_STEPS = [
     position: 'bottom' as const,
   },
   {
+    target: '[data-tour="header-stats"]',
+    title: 'Your Daily Overview',
+    content: 'See today\'s date, your habits completed today, and your current streak all in one glance.',
+    position: 'bottom' as const,
+  },
+  {
     target: '[data-tour="weekly-grid"]',
     title: 'Track Your Progress',
     content: 'Your habits appear here. Click on a day to mark it complete. Each habit shows your current streak!',

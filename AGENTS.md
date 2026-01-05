@@ -8,7 +8,7 @@ This file provides guidelines for AI coding agents working on this codebase.
 # Start development server
 npm run dev
 
-# Production build (always run before committing)
+# Production build (ALWAYS run before committing)
 npm run build
 
 # Start production server (after build)
@@ -17,7 +17,7 @@ npm run start
 # Lint codebase
 npm run lint
 
-# Run linter on specific files/directories
+# Lint specific files/directories
 npx eslint "components/**/*.{ts,tsx}"
 npx eslint "app/**/*.{ts,tsx}"
 ```
@@ -26,179 +26,134 @@ npx eslint "app/**/*.{ts,tsx}"
 
 ```
 habit-tracker/
-├── app/                    # Next.js App Router pages
-│   ├── page.tsx           # Main dashboard
-│   ├── layout.tsx         # Root layout
-│   └── globals.css        # Global styles + CSS variables
+├── app/              # Next.js App Router pages (layout.tsx, page.tsx)
 ├── components/
-│   ├── habits/            # Habit-related components (WeeklyGrid, HabitModal, etc.)
-│   ├── ui/                # Reusable UI components (Button, Card, etc.)
-│   ├── analytics/         # Analytics panel
-│   ├── calendar/          # Calendar panel
-│   ├── settings/          # Settings panel
-│   └── tour/              # Guided tour components
-├── hooks/                 # Custom React hooks (useConfetti, etc.)
-├── store/                 # Zustand state management (useHabitStore)
-├── types/                 # TypeScript type definitions
-└── lib/                   # Utility functions (cn for tailwind-merge)
+│   ├── habits/       # WeeklyGrid, HabitModal, TimeTracker, FocusedTimer
+│   ├── ui/           # Button, Card, ProgressBar, ClientOnly
+│   ├── analytics/    # AnalyticsPanel - stats, heatmaps, rankings
+│   ├── calendar/     # CalendarPanel - monthly calendar view
+│   ├── settings/     # SettingsPanel - theme, notifications, data
+│   ├── tour/         # Tour, TourButton - guided tour
+│   └── providers/    # ThemeProvider - dark/light mode
+├── hooks/            # useConfetti, useSound, useNotifications, useTimer
+├── store/            # Zustand state management (useHabitStore.ts)
+├── types/            # TypeScript type definitions
+└── lib/              # Utilities (cn, formatTime, debounce)
 ```
 
 ## Code Style Guidelines
 
 ### Imports
 
-- Use absolute imports with `@/` prefix (e.g., `import { useHabitStore } from '@/store/useHabitStore'`)
-- Group imports in this order:
-  1. React core imports
-  2. Third-party libraries (framer-motion, lucide-react, etc.)
-  3. Absolute imports from `@/`
-  4. Relative imports (./components, ./hooks, etc.)
-- Separate import groups with blank lines
+Order imports strictly by category, blank line between groups:
 
 ```typescript
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
+import { format, addDays } from 'date-fns';
 import { useHabitStore } from '@/store/useHabitStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { useConfetti } from '@/hooks/useConfetti';
 ```
 
 ### React Components
 
-- Client components must include `'use client'` at the top
-- Use function components, not class components
-- Use named exports for components
-- Component file naming: `PascalCase.tsx`
-- Keep components focused and under 200 lines when possible
-- Extract complex logic into custom hooks
+- **Client components**: `'use client'` at top, before imports
+- **File naming**: `PascalCase.tsx` for components, `camelCase.ts` for hooks
+- **Props**: Define interface with explicit types
 
 ```typescript
-export function HabitModal() {
-  // Component logic
-  return (
-    <div>...</div>
-  );
+interface HabitCardProps {
+  habit: Habit;
+  onComplete: (id: string) => void;
 }
+
+export function HabitCard({ habit }: HabitCardProps) { /* ... */ }
 ```
 
 ### TypeScript Types
 
-- Use explicit types for props, state, and function parameters
-- Define interfaces for complex objects in `types/index.ts`
-- Use TypeScript enums for fixed sets of related values
-- Avoid `any` type - use `unknown` or more specific types
-
-```typescript
-interface Habit {
-  id: string;
-  name: string;
-  category: HabitCategory;
-  color: string;
-  completions: Record<string, number>;
-  currentStreak: number;
-  // ...
-}
-
-type HabitCategory = 'health' | 'productivity' | 'fitness' | 'learning' | 'mindfulness' | 'social' | 'creative' | 'work' | 'personal' | 'other';
-```
+- **No `any`**: Use `unknown` or specific types
+- **Complex types**: Define in `types/index.ts`
+- **Interfaces over types**: For extensibility
 
 ### State Management (Zustand)
 
-- Use Zustand for global state (see `store/useHabitStore.ts`)
-- Define interface for store state with all actions
-- Use persist middleware for data that needs to survive page reloads
-- State updates should be immutable
+All state in `store/useHabitStore.ts`. Always use immutable updates:
 
 ```typescript
-interface HabitState {
-  habits: Habit[];
-  uiState: UIState;
-  addHabit: (data: HabitFormData) => void;
-  toggleHabitCompletion: (habitId: string, date: string, minutes?: number) => void;
-  // ...
-}
-
-export const useHabitStore = create<HabitState>()(
-  persist(
-    (set, get) => ({
-      habits: [],
-      addHabit: (data) => {
-        set((state) => ({
-          habits: [...state.habits, newHabit],
-        }));
-      },
-      // ...
-    }),
-    { name: 'habit-tracker-storage' }
-  )
-);
+addHabit: (data) => set((state) => ({
+  habits: [...state.habits, newHabit],
+})),
+deleteHabit: (id) => set((state) => ({
+  habits: state.habits.filter((h) => h.id !== id),
+})),
 ```
 
 ### CSS & Styling
 
-- Use Tailwind CSS for all styling
-- Use CSS variables from `:root` for colors (see `app/globals.css`)
-- Never use hardcoded colors - use `var(--primary)`, `var(--success)`, etc.
-- Use `cn()` utility from `@/lib/utils` for conditional classes
-- Follow responsive design pattern: `className="text-sm md:text-base"`
+- **Tailwind CSS v4** with CSS variables (`var(--primary)`, `var(--success)`, etc.)
+- **Always use `cn()`** for conditional classes
+- **Mobile-first**: Base styles, then `md:`/`lg:` breakpoints
+- **Animations**: Framer Motion `motion.*` components
 
 ```typescript
 <div className={cn(
-  "p-4 rounded-lg transition-all duration-300",
-  isActive && "bg-[var(--primary)] text-white",
-  isAnyTimerRunning && "dimmed-element"
+  "p-4 rounded-xl transition-all duration-200",
+  isActive && "bg-[var(--primary)] text-white"
 )} />
 ```
 
 ### Error Handling
 
-- Never use empty catch blocks: `catch(e) {}`
-- Use try/catch for async operations
-- Return meaningful error states from functions
-- Log errors appropriately for debugging
+- **Never empty catch blocks**: `catch(e) {}` is forbidden
+- **Always handle async errors**: try/catch with meaningful error states
 
 ### Naming Conventions
 
-- **Components**: PascalCase (`HabitModal`, `WeeklyGrid`)
-- **Hooks**: camelCase with "use" prefix (`useConfetti`, `useNotifications`)
-- **Variables & Functions**: camelCase (`activeHabits`, `toggleHabitModal`)
-- **Constants**: SCREAMING_SNAKE_CASE or camelCase for simple constants
-- **CSS Classes**: kebab-case (via Tailwind)
+| Item | Convention | Examples |
+|------|------------|----------|
+| Components | PascalCase | `WeeklyGrid`, `HabitModal` |
+| Hooks | use prefix | `useConfetti`, `useTimer` |
+| Variables/Functions | camelCase | `isCompleted`, `toggleModal` |
+| Constants | SCREAMING_SNAKE_CASE | `MAX_NAME_LENGTH` |
+| Types | PascalCase | `Habit`, `HabitCategory` |
+| CSS Variables | kebab-case | `--primary`, `--card-border` |
 
-### File Organization
+### Formatting
 
-- One component per file (except closely related small components)
-- Keep related files in same directory
-- Use index.ts for re-exports when module has multiple exports
+- Semicolons, single quotes, trailing commas
+- ~100 char line limit
+- Blank lines between import groups and major code blocks
 
-### Responsive Design
+### Git Commits
 
-- Use Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`
-- Mobile-first approach - base styles for mobile, `md:` for desktop
-- Test on both mobile and desktop before committing
-- See `components/MobileNav.tsx` for mobile-specific patterns
+- Run `npm run build` before committing (required)
+- Conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `style:`
 
-### Testing
+## Key Workflows
 
-- No test framework currently configured
-- When adding tests, place them alongside components with `.test.tsx` extension
-- Run `npm run build` to verify changes don't break production build
+### First-Time Visitor
+1. `WelcomeOverlay` checks `localStorage.hasSeenWelcomeOverlay`
+2. First visit: shows welcome → click "Start Tour Guide" → calls `startTour()`
+3. Tour uses `data-tour` attributes on elements for targeting
 
-## Commit Guidelines
+### Celebrations
+- **Confetti**: Triggers via `useConfetti.ts` on habit completion
+- **Sounds**: Web Audio API via `useSound.ts` with confetti
+- **Achievements**: `AchievementConfetti.ts` celebrates unlocks
 
-- Run `npm run build` before committing to ensure no build errors
-- Write clear commit messages describing the change
-- Use conventional commits format: `feat:`, `fix:`, `docs:`, `refactor:`
+## Important Files
 
-## Key Dependencies
-
-- **Framework**: Next.js 16 with App Router
-- **State**: Zustand with persist middleware
-- **Styling**: Tailwind CSS v4 with CSS variables
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Confetti**: canvas-confetti
+| File | Purpose |
+|------|---------|
+| `store/useHabitStore.ts` | All global state, habits, achievements, UI, timer |
+| `hooks/useConfetti.ts` | Confetti triggers + sound playback |
+| `hooks/useTimer.ts` | Per-habit/per-date timer state |
+| `components/habits/WeeklyGrid.tsx` | Main habit tracking UI |
+| `components/tour/Tour.tsx` | 8-step guided tour with tooltip positioning |
+| `app/globals.css` | CSS variables, dark mode overrides |
