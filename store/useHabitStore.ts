@@ -80,7 +80,7 @@ export const useHabitStore = create<HabitState>()(
         selectedDate: format(new Date(), 'yyyy-MM-dd'),
         viewMode: 'week',
         sidebarCollapsed: false,
-        theme: 'light',
+        theme: 'dark',
         focusedTimer: { habitId: null, date: null },
         floatingTimer: { habitId: null, date: null },
         floatingTimerPosition: { x: 20, y: 20 },

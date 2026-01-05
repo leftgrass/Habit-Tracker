@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 
 export const TOUR_STEPS = [
   {
-    target: '[data-tour="add-habit"]',
+    target: 'header [data-tour="add-habit"]',
     title: 'Add Your First Habit',
     content: 'Click here to create a new habit. You can set a name, category, frequency, and daily target time.',
     position: 'bottom' as const,
@@ -54,6 +54,7 @@ export const TOUR_STEPS = [
     title: 'Daily Motivation',
     content: 'Get a personalized motivational message based on your progress today. Keep pushing forward!',
     position: 'top' as const,
+    offset: 40,
   },
 ];
 
@@ -99,21 +100,22 @@ export function Tour() {
     if (target) {
       const rect = target.getBoundingClientRect();
       setTargetRect(rect);
-      calculateTooltipPosition(rect, tourStep.position);
+      calculateTooltipPosition(rect, tourStep.position, tourStep.offset);
     }
   };
 
-  const calculateTooltipPosition = (targetRect: DOMRect, position: string) => {
+  const calculateTooltipPosition = (targetRect: DOMRect, position: string, offset?: number) => {
     const tooltipWidth = 320;
     const tooltipHeight = 200;
     const gap = 16;
+    const extraOffset = offset || 0;
 
     let top = 0;
     let left = 0;
 
     switch (position) {
       case 'top':
-        top = targetRect.top - tooltipHeight - gap;
+        top = targetRect.top - tooltipHeight - gap - extraOffset;
         left = targetRect.left + (targetRect.width - tooltipWidth) / 2;
         break;
       case 'bottom':
@@ -167,7 +169,7 @@ export function Tour() {
     <>
       {targetRect && (
         <div
-          className="absolute z-[100]"
+          className="fixed z-[100]"
           style={{
             top: targetRect.top - 8,
             left: targetRect.left - 8,
@@ -185,7 +187,7 @@ export function Tour() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute z-[101] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
+        className="fixed z-[101] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
         style={{
           top: tooltipPosition.top,
           left: tooltipPosition.left,

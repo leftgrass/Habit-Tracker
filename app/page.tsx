@@ -17,6 +17,7 @@ import { ClientOnly } from '@/components/ui/ClientOnly';
 import { Tour } from '@/components/tour/Tour';
 import { AchievementConfetti } from '@/components/AchievementConfetti';
 import { MobileNav, MobileFab } from '@/components/MobileNav';
+import { WelcomeOverlay } from '@/components/WelcomeOverlay';
 
 export default function Home() {
   const { habits, toggleHabitModal, uiState, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
@@ -32,6 +33,7 @@ export default function Home() {
 
   return (
     <>
+      <WelcomeOverlay />
       <Tour />
       <AchievementConfetti />
       <HabitModal />
@@ -80,7 +82,7 @@ export default function Home() {
           </header>
 
           <div className="container mx-auto px-4 py-4 md:py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300" data-tour="stats">
               <Card hover>
                 <CardContent className="text-center py-4 md:py-6">
                   <CircularProgress progress={stats.weeklyCompletionRate} size={64} color="var(--primary)" />
@@ -124,7 +126,7 @@ export default function Home() {
               )}>
                 <Card className="md:hidden">
                   <CardContent className="py-4">
-                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4" data-tour="achievements">Recent Achievements</h3>
+                    <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">Recent Achievements</h3>
                     {recentAchievements.length === 0 ? (
                       <p className="text-[var(--muted)] text-center py-2">
                         Complete habits to unlock achievements!
