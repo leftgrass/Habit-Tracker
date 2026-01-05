@@ -4,7 +4,7 @@ import { useSound } from './useSound';
 
 export function useConfetti() {
   const hasTriggeredRef = useRef<Set<string>>(new Set());
-  const { playSuccessSound, playAchievementSound } = useSound();
+  const { playSuccessSound } = useSound();
 
   const triggerConfetti = useCallback((habitId: string, date: string) => {
     const key = `${habitId}-${date}`;
@@ -55,8 +55,6 @@ export function useConfetti() {
   };
 
   const triggerAchievementConfetti = useCallback(() => {
-    playAchievementSound();
-
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
