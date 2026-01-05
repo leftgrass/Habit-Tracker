@@ -78,15 +78,20 @@ export function Tour() {
   }, []);
 
   useEffect(() => {
-    // Only show tour after mount, if user hasn't seen it, and tour is incomplete
     if (isMounted && !hasSeenTour && tourCurrentStep < TOUR_STEPS.length) {
-      let frame1 = requestAnimationFrame(() => {
-        let frame2 = requestAnimationFrame(() => {
-          setIsVisible(true);
+      const timeout = setTimeout(() => {
+        let frame1 = requestAnimationFrame(() => {
+          let frame2 = requestAnimationFrame(() => {
+            setIsVisible(true);
+            setTimeout(updateTargetPosition, 50);
+          });
+          return () => cancelAnimationFrame(frame2);
         });
-        return () => cancelAnimationFrame(frame2);
-      });
-      return () => cancelAnimationFrame(frame1);
+        return () => {
+          clearTimeout(timeout);
+          cancelAnimationFrame(frame1);
+        };
+      }, 300);
     }
   }, [isMounted, hasSeenTour, tourCurrentStep]);
 
