@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 
 export const TOUR_STEPS = [
   {
-    target: 'header [data-tour="add-habit"]',
+    target: '[data-tour="add-habit"]',
     title: 'Add Your First Habit',
     content: 'Click here to create a new habit. You can set a name, category, frequency, and daily target time.',
     position: 'bottom' as const,

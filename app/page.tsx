@@ -133,16 +133,16 @@ export default function Home() {
                     </div>
                   </motion.div>
 
-                  {/* Right - Add Habit Button */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex-shrink-0"
-                  >
-                    <Button
-                      data-tour="add-habit"
-                      onClick={() => toggleHabitModal(true)}
+                   {/* Right - Add Habit Button */}
+                   <motion.div
+                     initial={{ opacity: 0, x: 20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: 0.2 }}
+                     className="flex-shrink-0"
+                     data-tour="add-habit"
+                   >
+                     <Button
+                       onClick={() => toggleHabitModal(true)}
                       className="flex items-center space-x-2 shadow-lg shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 transition-all duration-300 hover:scale-105"
                       style={{
                         backgroundColor: 'var(--primary)',
