@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Calendar, BarChart3, Settings, Menu, X } from 'lucide-react';
+import { Plus, Calendar, BarChart3, Settings, Menu, X, Sparkles, Clock, Flame } from 'lucide-react';
+import { format } from 'date-fns';
 import { useHabitStore } from '@/store/useHabitStore';
 import { WeeklyGrid } from '@/components/habits/WeeklyGrid';
 import { HabitModal } from '@/components/habits/HabitModal';
@@ -45,44 +46,121 @@ export default function Home() {
         <MobileFab />
         <div className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--card-bg)] to-[var(--background)] transition-all duration-300 pb-24 md:pb-0">
           <header className={cn(
-            "sticky top-0 z-40 bg-[var(--card-bg)]/80 backdrop-blur-lg border-b border-[var(--card-border)] transition-all duration-300 hidden md:block",
+            "sticky top-0 z-40 bg-[var(--card-bg)]/80 backdrop-blur-xl transition-all duration-300 hidden md:block",
             isAnyTimerRunning && "dimmed-element"
           )}>
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="lg:hidden p-2 rounded-lg hover:bg-[var(--secondary)]"
+            <div className="relative overflow-hidden">
+              {/* Decorative gradient line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--logo-gradient-from)] via-[var(--logo-gradient-via)] to-[var(--logo-gradient-to)]" />
+
+              <div className="container mx-auto px-4 py-4">
+                <div className="flex items-center justify-between">
+                  {/* Left - Logo */}
+                  <motion.div
+                    initial={{ rotate: -10, scale: 0.9 }}
+                    animate={{ rotate: 0, scale: 1 }}
+                    className="flex items-center gap-3 flex-shrink-0"
                   >
-                    {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                  </button>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--logo-gradient-from)] via-[var(--logo-gradient-via)] to-[var(--logo-gradient-to)] bg-clip-text text-transparent logo-gradient">
-                    Habit Tracker
-                  </h1>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <Button
-                    data-tour="add-habit"
-                    onClick={() => toggleHabitModal(true)}
-                    className="flex items-center space-x-2"
-                    style={{
-                      backgroundColor: 'var(--primary)',
-                      color: 'white',
-                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
-                    }}
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--logo-gradient-from)] to-[var(--logo-gradient-to)] flex items-center justify-center shadow-lg shadow-[var(--primary)]/20">
+                        <Sparkles className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                    <h1 className="text-xl font-bold bg-gradient-to-r from-[var(--logo-gradient-from)] via-[var(--logo-gradient-via)] to-[var(--logo-gradient-to)] bg-clip-text text-transparent logo-gradient whitespace-nowrap">
+                      Habit Tracker
+                    </h1>
+                  </motion.div>
+
+                  {/* Center - Unified Status Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex justify-start -ml-28"
                   >
-                    <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
-                    <span style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
-                  </Button>
+                     <div className="bg-[var(--secondary)]/60 backdrop-blur-sm rounded-2xl pl-5 pr-6 py-3 border border-[var(--card-border)]/50 -ml-1">
+                      <div className="flex items-center gap-6">
+                        {/* Greeting */}
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">
+                            {new Date().getHours() < 12 ? '🌅' : new Date().getHours() < 18 ? '☀️' : '🌙'}
+                          </span>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-[var(--foreground)]">
+                              {new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening'}
+                            </span>
+                             <span className="text-sm font-medium text-[var(--muted)]">
+                               {format(new Date(), 'EEEE, MMMM d')}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="w-px h-10 bg-[var(--card-border)]/50" />
+
+                        {/* Stats */}
+                        <div className="flex items-center gap-6 -ml-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-9 h-9 rounded-lg bg-[var(--success)]/15 flex items-center justify-center">
+                              <Clock className="w-4 h-4 text-[var(--success)]" />
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-xs font-medium text-[var(--foreground)]">Today</span>
+                               <span className="text-sm font-bold text-[var(--muted)]">
+                                {stats.completedToday}/{stats.totalHabits}
+                              </span>
+                            </div>
+                          </div>
+
+                          {true && (
+                            <>
+                              <div className="w-px h-8 bg-[var(--card-border)]/50" />
+                              <div className="flex items-center gap-2">
+                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--warning)] to-[var(--accent)]/50 flex items-center justify-center">
+                                  <Flame className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex flex-col">
+                                   <span className="text-xs font-medium text-[var(--foreground)]">Streak</span>
+                                  <span className="text-sm font-bold text-[var(--streak-color)]">
+                                    {stats.currentStreak}
+                                  </span>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Right - Add Habit Button */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex-shrink-0"
+                  >
+                    <Button
+                      data-tour="add-habit"
+                      onClick={() => toggleHabitModal(true)}
+                      className="flex items-center space-x-2 shadow-lg shadow-[var(--primary)]/25 hover:shadow-[var(--primary)]/40 transition-all duration-300 hover:scale-105"
+                      style={{
+                        backgroundColor: 'var(--primary)',
+                        color: 'white',
+                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)'
+                      }}
+                    >
+                      <Plus className="w-5 h-5" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))' }} />
+                      <span style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }}>Add Habit</span>
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
             </div>
           </header>
 
           <div className="container mx-auto px-4 py-4 md:py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300" data-tour="stats">
+            <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300", isAnyTimerRunning && "dimmed-element")} data-tour="stats">
               <Card hover>
                 <CardContent className="text-center py-4 md:py-6">
                   <CircularProgress progress={stats.weeklyCompletionRate} size={64} color="var(--primary)" />

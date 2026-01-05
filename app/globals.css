@@ -12,7 +12,7 @@
   --success: #7a8c1c;
   --warning: #b8860b;
   --danger: #b32d25;
-  --muted: #8a7a6a;
+  --muted: #6b5d4f;
   --ring-offset: #faf3e0;
   
   --dim-overlay: rgba(0, 0, 0, 0.5);
@@ -51,7 +51,7 @@ html.dark {
   /* Dark theme dimming effect variables */
   --dim-overlay: rgba(0, 0, 0, 0.75);
   --dim-backdrop-blur: blur(10px);
-  --dim-opacity: 0.85;
+  --dim-opacity: 0.7;
   --timer-glow: rgba(122, 162, 247, 0.4);
   --timer-glow-active: rgba(122, 162, 247, 0.95);
   
@@ -277,6 +277,10 @@ html.dark .text-gray-500 {
 
 html.dark .text-gray-700 {
   color: #d4d4d4 !important;
+}
+
+html.dark .text-\[var\(--muted\)\] {
+  color: #9ca8c8 !important;
 }
 
 html.dark .text-gray-400 {
