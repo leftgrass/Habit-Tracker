@@ -7,18 +7,20 @@ import { useHabitStore } from '@/store/useHabitStore';
 export function AchievementConfetti() {
   const { achievements } = useHabitStore();
   const { triggerAchievementConfetti } = useConfetti();
-  const previousProgressRef = useRef<Record<string, number>>({});
+  const hasTriggeredRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     achievements.forEach((achievement) => {
-      const prevProgress = previousProgressRef.current[achievement.id] || 0;
-      const justReachedTarget = prevProgress < achievement.target && achievement.progress >= achievement.target;
-
-      if (justReachedTarget) {
-        triggerAchievementConfetti();
+      const key = `achievement-${achievement.id}`;
+      
+      if (hasTriggeredRef.current.has(key)) {
+        return;
       }
 
-      previousProgressRef.current[achievement.id] = achievement.progress;
+      if (achievement.progress >= achievement.target) {
+        hasTriggeredRef.current.add(key);
+        triggerAchievementConfetti();
+      }
     });
   }, [achievements, triggerAchievementConfetti]);
 
