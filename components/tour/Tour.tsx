@@ -195,7 +195,7 @@ export function Tour() {
           className="fixed z-[100]"
           style={{
             top: targetRect.top - 8,
-            left: targetRect.left - 8,
+            left: targetRect.left - 6,
             width: targetRect.width + 16,
             height: targetRect.height + 16,
           }}
