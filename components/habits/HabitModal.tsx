@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { useHabitStore } from '@/store/useHabitStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { HabitCategory, HabitFrequency } from '@/types';
 
 const CATEGORIES = [
   { value: 'health', label: 'Health', emoji: '🏃' },
