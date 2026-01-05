@@ -52,9 +52,9 @@ export function useConfetti() {
   };
 
   const triggerAchievementConfetti = useCallback(() => {
-    const duration = 1000;
+    const duration = 2000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+    const defaults = { startVelocity: 35, spread: 360, ticks: 60, zIndex: 100 };
 
     const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
@@ -65,15 +65,18 @@ export function useConfetti() {
         return clearInterval(interval);
       }
 
-      const particleCount = 60 * (timeLeft / duration);
+      const particleCount = Math.floor(80 * (timeLeft / duration));
       
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: 0.5, y: 0.6 },
-        colors: ['#F59E0B', '#EF4444', '#EC4899', '#10B981', '#3B82F6', '#8B5CF6'],
-      });
-    }, 200);
+      // Launch from random positions across the screen
+      for (let i = 0; i < 3; i++) {
+        confetti({
+          ...defaults,
+          particleCount: Math.max(20, particleCount / 3),
+          origin: { x: randomInRange(0.1, 0.9), y: randomInRange(0.3, 0.7) },
+          colors: ['#F59E0B', '#EF4444', '#EC4899', '#10B981', '#3B82F6', '#8B5CF6'],
+        });
+      }
+    }, 150);
 
     return () => clearInterval(interval);
   }, []);
