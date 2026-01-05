@@ -83,7 +83,7 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8 transition-all duration-300">
               <Card hover>
                 <CardContent className="text-center py-4 md:py-6">
-                  <CircularProgress progress={stats.weeklyCompletionRate} size={60} md:size={80} color="var(--primary)" />
+                  <CircularProgress progress={stats.weeklyCompletionRate} size={64} color="var(--primary)" />
                   <p className="text-xs md:text-sm text-[var(--muted)] mt-2 md:mt-3">Weekly Progress</p>
                 </CardContent>
               </Card>
