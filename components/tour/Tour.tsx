@@ -87,6 +87,8 @@ export function Tour() {
   useEffect(() => {
     if (isVisible && tourStep) {
       updateTargetPosition();
+      const timeout = setTimeout(updateTargetPosition, 50);
+      return () => clearTimeout(timeout);
     }
   }, [isVisible, tourCurrentStep]);
 
