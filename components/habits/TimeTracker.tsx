@@ -163,7 +163,7 @@ export function TimeTracker({
                   }
                 }}
                 className={cn(
-                  'p-2 rounded-full transition-all',
+                  'p-2 rounded-full transition-all timer-button',
                   isRunning
                     ? 'bg-[var(--warning)] text-white hover:bg-[var(--warning)]/80'
                     : 'bg-[var(--success)] text-white hover:bg-[var(--success)]/80'
@@ -173,12 +173,12 @@ export function TimeTracker({
                 {isRunning ? (
                   <Pause className="w-5 h-5" />
                 ) : (
-                  <Play className="w-5 h-5 ml-0.5" />
+                  <Play className="w-5 h-5" />
                 )}
               </button>
               <button
                 onClick={handleReset}
-                className="p-2 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-border)] transition-all"
+                className="p-2 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-border)] transition-all timer-button"
                 title="Reset Timer"
               >
                 <RotateCcw className="w-5 h-5" />
@@ -186,7 +186,7 @@ export function TimeTracker({
               {onPopOut && (
                 <button
                   onClick={onPopOut}
-                  className="p-2 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--primary)] hover:bg-[var(--card-border)] transition-all"
+                  className="p-2 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--primary)] hover:bg-[var(--card-border)] transition-all timer-button"
                   title="Pop out timer"
                 >
                   <Maximize2 className="w-5 h-5" />
@@ -195,9 +195,9 @@ export function TimeTracker({
             </div>
           </>
         )}
-      </div>
+        </div>
 
-      <div className="flex items-center justify-center space-x-2 text-sm">
+        <div className="flex items-center justify-center space-x-2 text-sm">
         <Clock className="w-4 h-4 text-[var(--muted)]" />
         <span className="text-[var(--muted)]">
           Target: {formatTime(targetMinutes)}

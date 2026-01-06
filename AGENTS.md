@@ -1,37 +1,26 @@
 # AGENTS.md - Coding Guidelines for Habit Tracker
 
-This file provides guidelines for AI coding agents working on this codebase.
-
-## Build & Development Commands
+## Build Commands
 
 ```bash
-# Start development server
-npm run dev
-
-# Production build (ALWAYS run before committing)
-npm run build
-
-# Start production server (after build)
-npm run start
-
-# Lint codebase
-npm run lint
-
-# Lint specific files/directories
+npm run dev           # Start development server
+npm run build         # Production build (ALWAYS before committing)
+npm run start         # Start production server
+npm run lint          # Lint codebase
 npx eslint "components/**/*.{ts,tsx}"
-npx eslint "app/**/*.{ts,tsx}"
+npx tsc --noEmit      # Type check
 ```
 
 ## Project Structure
 
 ```
 habit-tracker/
-├── app/              # Next.js App Router pages (layout.tsx, page.tsx)
+├── app/              # Next.js App Router (layout.tsx, page.tsx)
 ├── components/
 │   ├── habits/       # WeeklyGrid, HabitModal, TimeTracker, FocusedTimer
 │   ├── ui/           # Button, Card, ProgressBar, ClientOnly
 │   ├── analytics/    # AnalyticsPanel - stats, heatmaps, rankings
-│   ├── calendar/     # CalendarPanel - monthly calendar view
+│   ├── calendar/     # CalendarPanel - monthly view
 │   ├── settings/     # SettingsPanel - theme, notifications, data
 │   ├── tour/         # Tour, TourButton - guided tour
 │   └── providers/    # ThemeProvider - dark/light mode
@@ -100,6 +89,7 @@ deleteHabit: (id) => set((state) => ({
 - **Always use `cn()`** for conditional classes
 - **Mobile-first**: Base styles, then `md:`/`lg:` breakpoints
 - **Animations**: Framer Motion `motion.*` components
+- **Dark mode**: CSS overrides in `app/globals.css`, use `html.dark` selector
 
 ```typescript
 <div className={cn(
@@ -123,17 +113,31 @@ deleteHabit: (id) => set((state) => ({
 | Constants | SCREAMING_SNAKE_CASE | `MAX_NAME_LENGTH` |
 | Types | PascalCase | `Habit`, `HabitCategory` |
 | CSS Variables | kebab-case | `--primary`, `--card-border` |
+| Tour targets | data-tour attribute | `data-tour="add-habit"` |
 
 ### Formatting
 
-- Semicolons, single quotes, trailing commas
-- ~100 char line limit
-- Blank lines between import groups and major code blocks
+Semicolons, single quotes, trailing commas, ~100 char line limit, blank lines between import groups and major code blocks.
 
 ### Git Commits
 
-- Run `npm run build` before committing (required)
-- Conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `style:`
+Run `npm run build` before committing (required). Use conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `style:`.
+
+## Tour System (IMPORTANT)
+
+- 9-step guided tour starting from WelcomeOverlay
+- Uses `data-tour` attributes on target elements
+- **Timing fix**: Tour waits 300ms + 2 RAF + 50ms timeout before showing
+- Highlight positioning: `targetRect.left - 6` offset for proper alignment
+- See `components/tour/Tour.tsx` for implementation
+
+## For Continuity
+
+If continuing from previous session:
+- Tour highlight positioning fixed (waits for page animations)
+- Dark mode visibility improved for quick stats and date display
+- Header stats (date + Today + Streak) styled with `text-[var(--muted)]` in dark mode
+- Tour step "Your Daily Overview" added for header stats area
 
 ## Key Workflows
 
@@ -155,5 +159,5 @@ deleteHabit: (id) => set((state) => ({
 | `hooks/useConfetti.ts` | Confetti triggers + sound playback |
 | `hooks/useTimer.ts` | Per-habit/per-date timer state |
 | `components/habits/WeeklyGrid.tsx` | Main habit tracking UI |
-| `components/tour/Tour.tsx` | 8-step guided tour with tooltip positioning |
+| `components/tour/Tour.tsx` | 9-step guided tour with positioning |
 | `app/globals.css` | CSS variables, dark mode overrides |

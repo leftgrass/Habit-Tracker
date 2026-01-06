@@ -82,8 +82,6 @@ export function AnalyticsPanel() {
     return 'bg-[var(--success)]';
   };
 
-  if (!isAnalyticsOpen) return null;
-
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
   return (

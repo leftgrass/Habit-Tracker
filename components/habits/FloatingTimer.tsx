@@ -230,7 +230,7 @@ export function FloatingTimer({ habitId, date, onClose }: FloatingTimerProps) {
               <button
                 onClick={toggle}
                 className={cn(
-                  'p-3 rounded-full transition-all shadow-lg',
+                  'p-3 rounded-full transition-all shadow-lg timer-button',
                   isRunning
                     ? 'bg-[var(--warning)] text-white hover:bg-[var(--warning)]/80'
                     : 'bg-[var(--success)] text-white hover:bg-[var(--success)]/80'
@@ -239,7 +239,7 @@ export function FloatingTimer({ habitId, date, onClose }: FloatingTimerProps) {
                 {isRunning ? (
                   <Pause className="w-5 h-5" />
                 ) : (
-                  <Play className="w-5 h-5 ml-0.5" />
+                  <Play className="w-5 h-5" />
                 )}
               </button>
             </div>
@@ -333,21 +333,21 @@ export function FloatingTimer({ habitId, date, onClose }: FloatingTimerProps) {
               {formatElapsedTime(isRunning ? Math.floor(displaySeconds / 60) : currentMinutes)}
             </motion.div>
 
-            <button
-              onClick={toggle}
-              className={cn(
-                'p-2 rounded-full transition-all shadow',
-                isRunning
-                  ? 'bg-[var(--warning)] text-white hover:bg-[var(--warning)]/80'
-                  : 'bg-[var(--success)] text-white hover:bg-[var(--success)]/80'
-              )}
-            >
-              {isRunning ? (
-                <Pause className="w-4 h-4" />
-              ) : (
-                <Play className="w-4 h-4 ml-0.5" />
-              )}
-            </button>
+              <button
+                onClick={toggle}
+                className={cn(
+                  'p-2 rounded-full transition-all shadow timer-button',
+                  isRunning
+                    ? 'bg-[var(--warning)] text-white hover:bg-[var(--warning)]/80'
+                    : 'bg-[var(--success)] text-white hover:bg-[var(--success)]/80'
+                )}
+              >
+                {isRunning ? (
+                  <Pause className="w-4 h-4" />
+                ) : (
+                  <Play className="w-4 h-4" />
+                )}
+              </button>
           </div>
 
           {/* Mini progress bar */}

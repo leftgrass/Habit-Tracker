@@ -31,8 +31,6 @@ export function CalendarPanel() {
     return { completed, total, percentage: total > 0 ? (completed / total) * 100 : 0 };
   };
 
-  if (!isCalendarOpen) return null;
-
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (

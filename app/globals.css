@@ -236,17 +236,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Dark mode overrides */
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-html.dark body {
-  background: var(--background);
-  color: var(--foreground);
-}
-
 html.dark .bg-white {
   background-color: #1a1a1a !important;
 }
@@ -403,3 +392,368 @@ html.dark .streak-color {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ============================================
+   TIMER ICON CENTERING
+   ============================================ */
+
+.timer-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.timer-button .ml-0\.5 {
+  margin-left: 0 !important;
+}
+
+.timer-button svg {
+  display: block;
+}
+
+.bg-\[var\(--success\)\]\.text-white.rounded-full {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.bg-\[var\(--warning\)\]\.text-white.rounded-full {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.flex.items-center.justify-center.space-x-4 button,
+.flex.items-center.justify-center.space-x-3 button,
+.flex.items-center.justify-center.space-x-2 button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ============================================
+   MOBILE-ONLY IMPROVEMENTS
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+  /* 1. Bottom Sheet Modals */
+  /* Transform existing modals to bottom-sheet style on mobile */
+  .fixed.inset-0.z-50.flex.items-center.justify-center {
+    align-items: flex-end !important;
+    padding-bottom: 0 !important;
+  }
+
+  .fixed.inset-0.z-50.flex.items-center.justify-center .bg-\[var\(--card-bg\)\] {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 85vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+    animation: slideUpMobile 0.3s ease-out !important;
+  }
+
+  @keyframes slideUpMobile {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Side panels (Analytics, Calendar, Settings) - full width bottom sheet */
+  .fixed.inset-y-0.right-0.z-50 {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* 2. Horizontal Scroll Weekly Grid */
+  .weekly-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .weekly-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .weekly-scroll-container > * {
+    scroll-snap-align: center;
+  }
+
+  /* Make day selector scrollable */
+  .flex.space-x-2.mb-6 {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .flex.space-x-2.mb-6 > * {
+    flex-shrink: 0;
+    scroll-snap-align: center;
+  }
+
+  /* 3. Touch Target Size - minimum 44px */
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Form inputs - prevent zoom by setting 16px minimum */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+    min-height: 44px !important;
+    padding: 12px 16px !important;
+  }
+
+  /* Button inside forms */
+  form button[type="submit"],
+  form button[type="button"] {
+    min-height: 48px !important;
+  }
+
+  /* 4. Sticky Header - Keep date selector visible while scrolling */
+  .sticky-date-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+  }
+
+  /* 5. Compact Stats Cards */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .stat-card {
+    padding: 16px !important;
+  }
+
+  .stat-card .text-3xl {
+    font-size: 1.75rem !important;
+  }
+
+  .stat-card .text-lg {
+    font-size: 0.875rem !important;
+  }
+
+  /* 6. Compact Habit Cards */
+  .habit-card-compact {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 8px !important;
+    padding: 16px !important;
+  }
+
+  .habit-card-compact .habit-header {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .habit-card-compact .habit-timer {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  /* Reduce spacing in habit cards */
+  .bg-\[var\(--secondary\)\].rounded-xl.p-4 {
+    padding: 12px 16px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .bg-\[var\(--secondary\)\].rounded-xl.p-4 .mb-4 {
+    margin-bottom: 8px !important;
+  }
+
+  /* 7. Hide less important elements on mobile */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* 8. Reduce animation duration for better performance */
+  * {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* 9. Better spacing for mobile */
+  .main-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-bottom: 100px !important;
+  }
+
+  /* 10. FAB positioning adjustment */
+  .fixed.bottom-20 {
+    bottom: 100px !important;
+    right: 16px !important;
+  }
+
+  /* 11. Modal form spacing */
+  form.p-6.space-y-4 {
+    padding: 20px !important;
+    gap: 16px !important;
+  }
+
+  form.p-6.space-y-4 input,
+  form.p-6.space-y-4 textarea {
+    margin-bottom: 0 !important;
+  }
+
+  /* 12. Category grid more compact */
+  .grid.grid-cols-5.gap-2 {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .grid.grid-cols-5.gap-2 button {
+    padding: 8px 4px !important;
+  }
+
+  .grid.grid-cols-5.gap-2 span {
+    font-size: 10px !important;
+  }
+
+  /* 13. Day selector buttons larger touch target */
+  .flex.space-x-2.mb-6 button {
+    min-width: 44px !important;
+    min-height: 60px !important;
+    padding: 8px 4px !important;
+  }
+
+  /* 14. Calendar grid more compact */
+  .grid.grid-cols-7.gap-1 {
+    gap: 4px !important;
+  }
+
+  .grid.grid-cols-7.gap-1 > div {
+    min-width: 36px !important;
+    min-height: 36px !important;
+    font-size: 12px !important;
+  }
+
+  /* 15. Settings tabs - horizontal scroll if needed */
+  .flex.border-b.border-\[var\(--card-border\)\] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .flex.border-b.border-\[var\(--card-border\)\] button {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 12px 16px !important;
+  }
+
+  /* 16. Progress bar touch target */
+  .relative .h-3 {
+    height: 8px !important;
+    min-height: 8px !important;
+  }
+
+  /* 17. Mobile navigation improvements */
+  .fixed.bottom-0.left-0.right-0.md\:hidden.z-50 {
+    padding: 8px 4px !important;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .fixed.bottom-0.left-0.right-0.md\:hidden.z-50 .flex.items-center.justify-around {
+    gap: 4px !important;
+  }
+
+  .fixed.bottom-0.left-0.right-0.md\:hidden.z-50 button {
+    min-width: 56px !important;
+    min-height: 48px !important;
+    padding: 8px !important;
+  }
+
+  /* 18. Welcome overlay adjustments */
+  .fixed.inset-0.z-\[9999\].flex.items-center.justify-center.p-4 {
+    padding: 16px !important;
+  }
+
+  .fixed.inset-0.z-\[9999\].flex.items-center.justify-center.p-4 .max-w-md {
+    max-width: 100% !important;
+  }
+
+  /* 19. Tour tooltip - fit mobile screen */
+  .fixed.z-\[101\].bg-\[var\(--card-bg\)\].rounded-xl {
+    width: calc(100% - 32px) !important;
+    max-width: 320px !important;
+    left: 16px !important;
+    right: 16px !important;
+  }
+
+  /* 20. Time tracker compact */
+  .text-3xl.font-mono.font-bold {
+    font-size: 2rem !important;
+  }
+
+  .text-4xl.font-mono.font-bold {
+    font-size: 2.5rem !important;
+  }
+
+  .text-5xl.font-mono.font-bold {
+    font-size: 3rem !important;
+  }
+
+  .text-7xl.font-mono.font-bold {
+    font-size: 4rem !important;
+  }
+
+  /* 21. Achievement cards grid */
+  .grid.grid-cols-2.md\:grid-cols-4.gap-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* 22. Card padding reduction */
+  .bg-\[var\(--card-bg\)\].rounded-2xl.shadow-lg.p-6 {
+    padding: 16px !important;
+  }
+
+  .card-padding {
+    padding: 16px !important;
+  }
+}
+
+/* ============================================
+   END MOBILE-ONLY IMPROVEMENTS
+   ============================================ */

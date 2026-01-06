@@ -171,10 +171,10 @@ export function FocusedTimer({ habitId, date, onClose }: FocusedTimerProps) {
             </div>
           </div>
 
-          <div className="px-8 pb-8 flex items-center justify-center space-x-4 relative z-10">
+            <div className="px-8 pb-8 flex items-center justify-center space-x-4 relative z-10">
             <button
               onClick={handleReset}
-              className="p-4 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-border)] transition-all"
+              className="p-4 rounded-full bg-[var(--secondary)] text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-border)] transition-all timer-button"
               title="Reset"
             >
               <RotateCcw className="w-6 h-6" />
@@ -183,7 +183,7 @@ export function FocusedTimer({ habitId, date, onClose }: FocusedTimerProps) {
             <button
               onClick={toggle}
               className={cn(
-                'p-6 rounded-full transition-all shadow-lg',
+                'p-6 rounded-full transition-all shadow-lg timer-button',
                 isRunning
                   ? 'bg-[var(--warning)] text-white hover:bg-[var(--warning)]/80'
                   : 'bg-[var(--success)] text-white hover:bg-[var(--success)]/80'
@@ -193,7 +193,7 @@ export function FocusedTimer({ habitId, date, onClose }: FocusedTimerProps) {
               {isRunning ? (
                 <Pause className="w-8 h-8" />
               ) : (
-                <Play className="w-8 h-8 ml-1" />
+                <Play className="w-8 h-8" />
               )}
             </button>
           </div>

@@ -16,6 +16,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Habit Tracker | presented by leftgrass",
   description: "Track your daily habits and build streaks",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Habit Tracker",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     title: "Habit Tracker | presented by leftgrass",
     description: "Track your daily habits and build streaks",
@@ -35,6 +44,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#7aa2f7" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

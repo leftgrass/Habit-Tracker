@@ -7,7 +7,6 @@ import { useHabitStore } from '@/store/useHabitStore';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { TourButton } from '@/components/tour/Tour';
 
 function Toggle({ enabled, onChange, disabled = false }: { enabled: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
@@ -42,8 +41,6 @@ export function SettingsPanel() {
       setNotifications({ enabled: true });
     }
   };
-
-  if (!isSettingsOpen) return null;
 
   const handleExport = () => {
     const data = {
@@ -367,9 +364,8 @@ export function SettingsPanel() {
                       <CardContent className="pt-6">
                         <div className="space-y-4">
                           <p className="text-sm text-[var(--muted)] text-center">
-                            Want a quick walkthrough of all features?
+                            Made with ❤️ for building better habits.
                           </p>
-                          <TourButton />
                         </div>
                       </CardContent>
                     </Card>

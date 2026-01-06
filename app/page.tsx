@@ -19,8 +19,20 @@ import { Tour } from '@/components/tour/Tour';
 import { AchievementConfetti } from '@/components/AchievementConfetti';
 import { MobileNav, MobileFab } from '@/components/MobileNav';
 import { WelcomeOverlay } from '@/components/WelcomeOverlay';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { MobileHome } from '@/components/mobile/MobileHome';
 
 export default function Home() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileHome />;
+  }
+
+  return <DesktopHome />;
+}
+
+function DesktopHome() {
   const { habits, toggleHabitModal, uiState, getWeeklyStats, achievements, toggleSettings, toggleAnalytics, toggleCalendar, activeTimer } = useHabitStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const activeHabits = habits.filter(h => !h.isArchived);
