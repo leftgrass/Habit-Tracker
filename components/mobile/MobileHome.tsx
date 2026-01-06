@@ -116,14 +116,15 @@ export function MobileHome() {
         .progress-text {
           display: flex;
           flex-direction: column;
+          justify-content: flex-end;
           align-items: flex-start;
+          line-height: 1;
         }
         
         .progress-num {
           font-size: 14px;
           font-weight: 700;
           color: var(--foreground);
-          line-height: 1;
         }
         
         .progress-label {
