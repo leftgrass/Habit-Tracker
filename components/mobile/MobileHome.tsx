@@ -109,7 +109,6 @@ export function MobileHome() {
           background: var(--card-bg);
           padding: 6px 10px 6px 6px;
           border-radius: 12px;
-          border: 1px solid var(--card-border);
           flex-shrink: 0;
           height: 40px;
         }
