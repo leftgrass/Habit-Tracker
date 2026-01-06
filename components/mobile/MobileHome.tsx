@@ -69,6 +69,7 @@ export function MobileHome() {
           justify-content: center;
           box-shadow: 0 4px 12px rgba(122, 162, 247, 0.3);
           flex-shrink: 0;
+          margin-top: 4px;
         }
         
         .greeting-section {
